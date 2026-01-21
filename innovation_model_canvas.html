@@ -133,7 +133,16 @@
             background-color: #ecf0f1; padding: 8px; 
             border-bottom: 1px solid #bdc3c7; color: #2c3e50;
             font-weight: 600;
+            display: flex; justify-content: space-between; align-items: center; /* flex layout for icon */
         }
+        
+        .info-icon {
+            cursor: pointer; font-size: 16px; width: 20px; height: 20px;
+            display: inline-flex; align-items: center; justify-content: center;
+            border-radius: 50%; background: #bdc3c7; color: white;
+            transition: background 0.2, transform 0.2s;
+        }
+        .info-icon:hover { background: #3498db; transform: scale(1.1); }
 
         .rich-text-editor {
             flex-grow: 1; padding: 5px; border: 1px dashed transparent;
@@ -269,6 +278,13 @@
         </div>
     </div>
 
+    <div id="section-info-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeSectionInfo()">×</button>
+            <div id="section-info-content"></div>
+        </div>
+    </div>
+
     <div id="bubble-toolbar" class="bubble-toolbar">
         <button class="editor-btn" onclick="formatDoc('bold')" title="Bold"><b>B</b></button>
         <button class="editor-btn" onclick="formatDoc('italic')" title="Italic"><em>I</em></button>
@@ -298,15 +314,42 @@
     </div>
 
     <div class="canvas-container" id="canvas-grid">
-        <div class="canvas-section" id="section-1"><h3>1. Ausgangslage</h3><div class="rich-text-editor" contenteditable="true"></div></div>
-        <div class="canvas-section" id="section-2"><h3>2. Lösung & Hypothese</h3><div class="rich-text-editor" contenteditable="true"></div></div>
-        <div class="canvas-section" id="section-3"><h3>3. Mehrwert</h3><div class="rich-text-editor" contenteditable="true"></div></div>
-        <div class="canvas-section" id="section-4"><h3>4. Stakeholder / User</h3><div class="rich-text-editor" contenteditable="true"></div></div>
-        <div class="canvas-section" id="section-7"><h3>7. Daten und Compliance</h3><div class="rich-text-editor" contenteditable="true"></div></div>
-        <div class="canvas-section" id="section-5"><h3>5. Erfolgskriterien</h3><div class="rich-text-editor" contenteditable="true"></div></div>
-        <div class="canvas-section" id="section-9"><h3>9. Risiken</h3><div class="rich-text-editor" contenteditable="true"></div></div>
-        <div class="canvas-section" id="section-6"><h3>6. Perspektiven</h3><div class="rich-text-editor" contenteditable="true"></div></div>
-        <div class="canvas-section" id="section-8"><h3>8. Ressourcen und Zeithorizont</h3><div class="rich-text-editor" contenteditable="true"></div></div>
+        <div class="canvas-section" id="section-1">
+            <h3>1. Ausgangslage <span class="info-icon" onclick="openSectionInfo(1)">i</span></h3>
+            <div class="rich-text-editor" contenteditable="true"></div>
+        </div>
+        <div class="canvas-section" id="section-2">
+            <h3>2. Lösung & Hypothese <span class="info-icon" onclick="openSectionInfo(2)">i</span></h3>
+            <div class="rich-text-editor" contenteditable="true"></div>
+        </div>
+        <div class="canvas-section" id="section-3">
+            <h3>3. Mehrwert <span class="info-icon" onclick="openSectionInfo(3)">i</span></h3>
+            <div class="rich-text-editor" contenteditable="true"></div>
+        </div>
+        <div class="canvas-section" id="section-4">
+            <h3>4. Stakeholder / User <span class="info-icon" onclick="openSectionInfo(4)">i</span></h3>
+            <div class="rich-text-editor" contenteditable="true"></div>
+        </div>
+        <div class="canvas-section" id="section-7">
+            <h3>7. Daten und Compliance <span class="info-icon" onclick="openSectionInfo(7)">i</span></h3>
+            <div class="rich-text-editor" contenteditable="true"></div>
+        </div>
+        <div class="canvas-section" id="section-5">
+            <h3>5. Erfolgskriterien <span class="info-icon" onclick="openSectionInfo(5)">i</span></h3>
+            <div class="rich-text-editor" contenteditable="true"></div>
+        </div>
+        <div class="canvas-section" id="section-9">
+            <h3>9. Risiken <span class="info-icon" onclick="openSectionInfo(9)">i</span></h3>
+            <div class="rich-text-editor" contenteditable="true"></div>
+        </div>
+        <div class="canvas-section" id="section-6">
+            <h3>6. Perspektiven <span class="info-icon" onclick="openSectionInfo(6)">i</span></h3>
+            <div class="rich-text-editor" contenteditable="true"></div>
+        </div>
+        <div class="canvas-section" id="section-8">
+            <h3>8. Ressourcen und Zeithorizont <span class="info-icon" onclick="openSectionInfo(8)">i</span></h3>
+            <div class="rich-text-editor" contenteditable="true"></div>
+        </div>
     </div>
 
 <script>
@@ -616,12 +659,119 @@
         modal.classList.toggle('visible');
     }
 
+    const sectionInfos = {
+        1: `
+            <h2>1. Ausgangslage</h2>
+            <p><strong>Leitfrage: Warum tun wir das überhaupt?</strong></p>
+            <ul>
+                <li><strong>Bei PULL (Amt-Anfrage):</strong> Beschreiben Sie das Problem, nicht die gewünschte Lösung. Wo verliert das Amt Zeit? Wo entstehen Fehler? Welcher Bürger-Service ist ungenügend?</li>
+                <li><strong>Bei PUSH (Tech-Treiber):</strong> Welches Szenario könnte durch die neue Technologie (z.B. GenAI, Blockchain) revolutioniert werden?</li>
+            </ul>
+            <p><strong>Wichtig:</strong> Keine technischen Details hier, sondern Business-Kontext.<br>
+            (PUSH: Welches Szenario soll verbessert werden?)</p>
+        `,
+        // Platzhalter für die anderen Sections
+        2: `
+            <h2>2. Lösung & Hypothese</h2>
+            <p><strong>Leitfrage:</strong> Was ist das Experiment?</p>
+            <p><strong>Hypothese:</strong> Formulieren Sie eine Annahme, die falsifizierbar ist (z. B. "Wir glauben, dass LLMs Anfragen von Bürgern zu 80% korrekt vorformulieren können").</p>
+            <p><strong>Lösung:</strong> Beschreiben Sie den PoC (App, Dashboard, Algorithmus).</p>
+            <p><strong>Scope:</strong> Definieren Sie "Out-of-Scope" (Was machen wir explizit nicht?), um Erwartungen zu managen und die Timebox zu halten.</p>
+        `,
+        3: `
+            <h2>3. Mehrwert</h2>
+            <p><strong>Leitfrage:</strong> Was springt dabei heraus?</p>
+            <p><strong>Qualitativ:</strong> Bessere Entscheidungsqualität, höhere Mitarbeiterzufriedenheit, Imagegewinn.</p>
+            <p><strong>Quantitativ:</strong> Versuchen Sie eine erste Schätzung (z.B. "Potenzial zur Einsparung von 2 FTE pro Amt").</p>
+            <p><strong>Strategie:</strong> Passt das Vorhaben zur Digitalstrategie der Bundesverwaltung? (Dies ist essentiell für das spätere GS-Factsheet).</p>
+            <p><strong>Sicht:</strong> Beschreiben Sie den Mehrwert aus Sicht "Amt" und aus Sicht "Departement WBF".</p>
+        `,
+        4: `
+            <h2>4. Stakeholder / User</h2>
+            <p><strong>Leitfrage:</strong> Mit wem arbeiten wir?</p>
+            <p><strong>User:</strong> Wer bedient den PoC? Nennen Sie konkrete Personas (z.B. "Sachbearbeiterin im Rechtsdienst"). Beschreiben Sie die genaue Nutzung der einzelnen Personas – welche Aufgaben sie erledigen, welche Daten sie benötigen und wie sie mit dem System interagieren.</p>
+            <p><strong>Commitment:</strong> Bei Pull‑Projekten muss hier ein Ansprechpartner stehen, der Zeit für Tests und Feedback zusichert. Ohne definierte Tester und deren Verfügbarkeit kann der PoC nicht durchgeführt werden.</p>
+        `,
+        5: `
+            <h2>5. Erfolgskriterien</h2>
+            <p><strong>Leitfrage:</strong> Wann ist das Explorationsvorhaben ein Erfolg?</p>
+            <p><strong>KPIs:</strong> Definieren Sie KPIs vor dem Start, um subjektive Diskussionen zu vermeiden.</p>
+            <h3>Harte KPIs</h3>
+            <ul>
+            <li>Antwortzeit &lt; 2s</li>
+            <li>Fehlerquote &lt; 5%</li>
+            <li>Durchsatz (z. B. Transaktionen pro Sekunde)</li>
+            </ul>
+            <h3>Weiche KPIs</h3>
+            <ul>
+            <li>User-Feedback Score</li>
+            <li>Verständlichkeit der UI</li>
+            </ul>
+            <p><strong>Factsheet:</strong> Diese Daten bilden das Rückgrat der Empfehlung im späteren Factsheet (Go / No-Go).</p>
+        `,
+        6: `
+            <h2>6. Perspektiven</h2>
+            <p><strong>Leitfrage:</strong> Was sind die perspektivischen Möglichkeiten nach dem PoC?</p>
+            <p><strong>Skalierung:</strong> Ist die Lösung ein "One-Off" für ein Amt oder eine Plattform-Lösung für das gesamte WBF (Skaleneffekte)?</p>
+            <p><strong>Umsetzung:</strong> Deuten Sie an, ob später eine Eigenentwicklung ("Make") oder eine Beschaffung ("Buy") wahrscheinlich ist.</p>
+        `,
+        7: `
+            <h2>7. Daten und Compliance</h2>
+            <p><strong>Leitfrage:</strong> Dürfen wir das so bauen?</p>
+            <p><strong>Datenschutz:</strong> Werden Personendaten verarbeitet? Wenn ja: Liegt eine Rechtsgrundlage vor oder müssen Daten anonymisiert/synthetisiert werden?</p>
+            <p><strong>Sicherheit:</strong> Wo läuft der PoC? (Cloud vs. On-Premise). Beachten Sie allfällige WBF-Cloud-Richtlinien.</p>
+            <p><em>Klären Sie dies vor Start, um einen Abbruch durch den Datenschutzbeauftragten zu vermeiden.</em></p>
+        `,
+        8: `
+            <h2>8. Ressourcen und Zeithorizont</h2>
+            <p><strong>Leitfrage:</strong> Wieviel Investition ist nötig?</p>
+            <p><strong>Timebox:</strong> PoCs sind keine Dauerprojekte. Setzen Sie ein hartes Enddatum (z.B. 6 Wochen).</p>
+            <ul>
+            <li>für Entwicklung</li>
+            <li>für Testing</li>
+            </ul>
+            <p><strong>Input:</strong> Was muss das Amt liefern? (Datenzugriff, Fachwissen, Lizenzen).</p>
+            <p><strong>Budget:</strong> Falls interne / externe Dienstleister involviert sind, hier die Zeit- / Kostenschätzung eintragen.</p>
+        `,
+        9: `
+            <h2>9. Risiken</h2>
+            <p><strong>Leitfrage:</strong> Worüber könnten wir stolpern?</p>
+            <h3>Showstopper</h3>
+            <p>Seien Sie ehrlich bezüglich potenzieller Showstopper.</p>
+            <h3>Beispiele</h3>
+            <ul>
+            <li>Datenqualität ist unbekannt</li>
+            <li>Schnittstelle zu Fachanwendung X ist nicht dokumentiert</li>
+            <li>Ressourcenengpass im Amt während Ferienzeit</li>
+            </ul>
+        `
+    };
+
+    function openSectionInfo(sectionId) {
+        const modal = document.getElementById('section-info-modal');
+        const contentDiv = document.getElementById('section-info-content');
+        contentDiv.innerHTML = sectionInfos[sectionId] || '<p>Keine Info verfügbar.</p>';
+        modal.classList.add('visible');
+    }
+
+    function closeSectionInfo() {
+        document.getElementById('section-info-modal').classList.remove('visible');
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
         // Close modal on outside click
         const modal = document.getElementById('info-modal');
         modal.addEventListener('click', (e) => {
             if (e.target === modal) {
                 toggleInfoModal();
+            }
+        });
+
+        // Close section info modal on outside click
+        const sectionModal = document.getElementById('section-info-modal');
+        sectionModal.addEventListener('click', (e) => {
+            if (e.target === sectionModal) {
+                closeSectionInfo();
             }
         });
 
