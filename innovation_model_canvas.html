@@ -179,6 +179,31 @@
         .resizer-col { cursor: col-resize; top: 0; bottom: 0; width: 12px; margin-left: -6px; }
         .resizer-row { cursor: row-resize; left: 0; right: 0; height: 12px; margin-top: -6px; }
 
+        /* --- MODAL --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5); z-index: 3000;
+            display: none; align-items: center; justify-content: center;
+        }
+        .modal-overlay.visible { display: flex; }
+        .modal-content {
+            background: white; padding: 30px; border-radius: 8px;
+            max-width: 800px; max-height: 90vh; overflow-y: auto;
+            position: relative; box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            font-family: 'Segoe UI', sans-serif; line-height: 1.6;
+        }
+        .modal-close {
+            position: absolute; top: 15px; right: 20px;
+            font-size: 24px; cursor: pointer; color: #888;
+            background: none; border: none; font-weight: bold;
+        }
+        .modal-close:hover { color: #333; }
+        .modal-content h2 { color: #2c3e50; margin-top: 0; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; }
+        .modal-content h3 { color: #34495e; margin-bottom: 10px; margin-top: 25px; font-size: 1.1em; }
+        .modal-content ul { margin-top: 5px; padding-left: 20px; }
+        .modal-content li { margin-bottom: 5px; }
+        .modal-content strong { color: #2c3e50; }
+
         /* Grid Placement */
         #section-1 { grid-area: area1; }
         #section-2 { grid-area: area2; }
@@ -206,6 +231,42 @@
         <span style="margin-right: 10px;">💾 Canvas Ops:</span>
         <button class="file-btn" onclick="saveHTML('default')">Save (Download)</button>
         <button class="file-btn secondary" onclick="saveHTML('picker')">Save As...</button>
+        <button class="file-btn secondary" onclick="toggleInfoModal()" style="margin-left: auto;">ℹ️ Info</button>
+    </div>
+
+    <div id="info-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close" onclick="toggleInfoModal()">×</button>
+            <h2>Zweck und Zielsetzung des WBF Innovation Model Canvas</h2>
+            
+            <h3>1. Zweck</h3>
+            <p>Das Innovation Model Canvas ist das zentrale Steuerungsinstrument für die Initiierung von Proof of Concepts (PoCs) im Rahmen von Innovationsvorhaben. Es dient als gemeinsames Verständnis zwischen dem Fachamt und dem Innovationsteam. Ziel ist es, komplexe Fragestellungen auf einer einzigen Seite zu strukturieren, um Innovationsvorhaben zielgerichtet, ressourcenschonend und entscheidungsorientiert zu validieren.</p>
+
+            <h3>2. Nutzen</h3>
+            <p>Ein PoC ist kein Selbstzweck, sondern ein Experiment zur Beantwortung einer geschäftskritischen Frage. Das Canvas stellt sicher, dass wir nicht nur technische Machbarkeit prüfen, sondern die Voraussetzungen für eine spätere Produktiv-Umsetzung schaffen.</p>
+            <p>Es erfüllt drei wesentliche Funktionen:</p>
+            <ul>
+                <li><strong>Fokussierung:</strong> Es definiert klare Grenzen ("In-Scope" vs. "Out-of-Scope") und verhindert das unkontrollierte Anwachsen von Anforderungen während der kurzen PoC-Phase.</li>
+                <li><strong>Vorbereitung für einen Umsetzungsentscheid:</strong> Das Canvas ist so aufgebaut, dass die Ergebnisse direkt in das Factsheet für das Generalsekretariat WBF überführt werden können. Vor dem Start wird definiert, welche Daten (KPIs, Kostenindikationen, Nutzen) gemessen werden müssen, um später eine fundierte "Go / No-Go"-Entscheidung zu ermöglichen.</li>
+                <li><strong>Synchronisation:</strong> Das Canvas harmonisiert das Verständnis aller Beteiligten.
+                    <ul>
+                        <li><em>Bei PULL-Vorhaben:</em> Zwingt dazu, das Problem des Amtes präzise zu isolieren, bevor über Lösungen gesprochen wird.</li>
+                        <li><em>Bei PUSH-Vorhaben:</em> Zwingt dazu, abstrakte Technologien in konkrete, wertstiftende Szenarien für die Bundesverwaltung zu übersetzen.</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3>3. Anwendung im Innovationsprozess</h3>
+            <p>Das Dokument ist ein „lebendes“ Artefakt. Es wird vor Beginn des PoCs gemeinsam ausgefüllt und dient als Freigabedokument für den Start. Am Ende des PoCs werden die Hypothesen (Feld 2) und Erfolgskriterien (Feld 5) gegen die Realität geprüft.</p>
+            <ul>
+                <li><strong>Status PULL:</strong> Fokus auf Nutzerbedürfnisse, Prozessintegration, Effizienzsteigerung und Akzeptanzkriterien des Amtes.</li>
+                <li><strong>Status PUSH:</strong> Fokus auf technologische Reife, Skalierbarkeit im WBF und potenzielle Anwendungsfälle.</li>
+            </ul>
+
+            <p style="margin-top: 20px; font-style: italic; border-left: 4px solid #27ae60; padding-left: 10px;">
+                <strong>Fazit:</strong> Nur wenn das Canvas vollständig und plausibel ausgefüllt ist, startet die Umsetzung. Dies ermöglicht einen effizienten Einsatz von Bundesmitteln und eine erhöhte Erfolgsquote bei der Überführung von Innovationen in den regulären Betrieb.
+            </p>
+        </div>
     </div>
 
     <div id="bubble-toolbar" class="bubble-toolbar">
@@ -550,7 +611,23 @@
     /* =========================================
        5. INITIALIZATION
        ========================================= */
+    function toggleInfoModal() {
+        const modal = document.getElementById('info-modal');
+        modal.classList.toggle('visible');
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
+        // Close modal on outside click
+        const modal = document.getElementById('info-modal');
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                toggleInfoModal();
+            }
+        });
+
+        // Show info modal on startup
+        toggleInfoModal();
+
         autoResizeGlobal();
         document.querySelectorAll('.rich-text-editor').forEach(e => e.addEventListener('input', () => autoResizeGlobal()));
         window.addEventListener('resize', () => autoResizeGlobal());
