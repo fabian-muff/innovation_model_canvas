@@ -1,37 +1,92 @@
 <!DOCTYPE html>
-<html lang="de">
-<head>
+<html lang="de"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Innovation Model Canvas - Fixed Toolbar</title>
+    <title>Innovation Model Canvas</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 20px;
-            background-color: #f4f4f4;
-            color: #333;
-            user-select: none; 
-            padding-top: 50px; 
+        :root {
+            --primary-bg: #f4f4f4;
+            --toolbar-bg: #2c3e50;
+            --border-color: #2c3e50;
+            --section-border: #95a5a6;
+            --accent-blue: #3498db;
         }
 
-        h1 { text-align: center; margin-bottom: 20px; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 80px 20px 40px 20px;
+            background-color: var(--primary-bg);
+            color: #333;
+            user-select: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        /* --- WRAPPER FOR CONSISTENT WIDTH --- */
+        .main-wrapper {
+            width: 100%;
+            max-width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 0;
+            font-size: 2em;
+        }
 
         /* --- TOP FILE TOOLBAR --- */
         .file-toolbar {
-            position: fixed; top: 0; left: 0; right: 0;
-            background: #2c3e50; color: white;
-            padding: 10px 20px; z-index: 2000;
-            display: flex; gap: 15px; align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--toolbar-bg);
+            color: white;
+            padding: 10px 20px;
+            z-index: 2000;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
+
         .file-btn {
-            background: #27ae60; color: white; border: none;
-            padding: 8px 15px; border-radius: 4px; cursor: pointer;
-            font-weight: bold; font-size: 14px; transition: background 0.2s;
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: background 0.2s;
         }
-        .file-btn:hover { background: #219150; }
-        .file-btn.secondary { background: #2980b9; }
-        .file-btn.secondary:hover { background: #2471a3; }
+
+        .file-btn:hover {
+            background: #219150;
+        }
+
+        .file-btn.secondary {
+            background: #2980b9;
+        }
+
+        .file-btn.secondary:hover {
+            background: #2471a3;
+        }
+
+        .file-btn.warning {
+            background: #e67e22;
+        }
+
+        .file-btn.warning:hover {
+            background: #d35400;
+        }
 
         /* --- FANCY FLOATING EDITOR TOOLBAR --- */
         .bubble-toolbar {
@@ -39,628 +94,1002 @@
             background: #34495e;
             padding: 5px 8px;
             border-radius: 6px;
-            display: none; 
+            display: none;
             gap: 5px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
             z-index: 1500;
-            transition: opacity 0.1s;
         }
-        
-        /* Smooth fade in */
+
         .bubble-toolbar.visible {
             display: flex;
-            opacity: 1;
             animation: popIn 0.15s ease-out;
         }
 
         @keyframes popIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .bubble-toolbar::after {
-            content: ''; position: absolute; top: 100%; left: 20px;
-            border-width: 6px; border-style: solid;
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 20px;
+            border-width: 6px;
+            border-style: solid;
             border-color: #34495e transparent transparent transparent;
         }
 
         .editor-btn {
-            background: transparent; border: none; color: white;
-            padding: 6px; border-radius: 4px; cursor: pointer;
-            font-size: 16px; min-width: 30px; display: flex;
-            align-items: center; justify-content: center;
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 6px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            min-width: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .editor-btn:hover { background: rgba(255,255,255,0.1); }
 
-        /* --- CONTROLS ROW --- */
+        .editor-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* --- PROPERTY SECTION --- */
+        .property-section {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            border: 1px solid #ddd;
+        }
+
+        .property-item {
+            display: flex;
+            flex-direction: column;
+            min-width: 200px;
+            flex: 1;
+        }
+
+        .property-item label {
+            font-weight: bold;
+            font-size: 0.85em;
+            margin-bottom: 5px;
+            color: #7f8c8d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .property-item input {
+            padding: 8px;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+
+        /* --- CONTROLS --- */
         .controls-row {
-            display: flex; justify-content: flex-end; 
-            align-items: center; margin-bottom: 10px; height: 40px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            height: 40px;
         }
 
         .postit-source {
             background-color: #f1c40f;
             padding: 8px 16px;
             border: 1px solid #d4ac0d;
-            box-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-            cursor: grab; font-weight: bold; border-radius: 20px;
-            display: inline-flex; align-items: center; gap: 8px;
-            color: #333; font-size: 0.9em;
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            cursor: grab;
+            font-weight: bold;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #333;
+            font-size: 0.9em;
         }
-        .postit-source:active { cursor: grabbing; }
 
-        /* --- PROPERTY SECTION --- */
-        .property-section {
-            background-color: #fff; padding: 15px; border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px;
-            display: flex; flex-wrap: wrap; gap: 20px; border: 1px solid #ddd;
-        }
-        .property-item { display: flex; flex-direction: column; min-width: 200px; flex: 1; }
-        .property-item label { font-weight: bold; font-size: 0.85em; margin-bottom: 5px; color: #7f8c8d; text-transform: uppercase; letter-spacing: 0.5px; }
-        .property-item input { padding: 8px; border: 1px solid #bdc3c7; border-radius: 4px; font-size: 1em; transition: border 0.2s; }
-        .property-item input:focus { border-color: #3498db; outline: none; }
-
-        /* --- CANVAS GRID --- */
+        /* --- CANVAS GRID (FULL WIDTH REFERENCE) --- */
         .canvas-container {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            grid-template-rows: minmax(200px, 1fr) minmax(200px, 1fr) minmax(150px, auto);
+            grid-template-columns: 18.8535% 18.8535% 18.8535% 18.8535% 18.8535%;
+            grid-template-rows: 38.8912% 31.7971% 19.7602%;
             gap: 10px;
             background-color: #fff;
-            border: 2px solid #2c3e50;
+            border: 2px solid var(--border-color);
             padding: 10px;
-            grid-template-areas: 
+            grid-template-areas:
                 "area1 area2 area3 area4 area7"
                 "area1 area2 area3 area5 area9"
                 "area6 area6 area6 area8 area8";
-            height: calc(100vh - 300px); min-height: 800px;
-            position: relative; 
+            min-height: 850px;
+            width: 100%;
+            box-sizing: border-box;
+            position: relative;
         }
 
         .canvas-section {
-            border: 1px solid #95a5a6;
-            padding: 10px; display: flex; flex-direction: column;
-            background-color: #fff; overflow: hidden; 
-            transition: box-shadow 0.2s;
+            border: 1px solid var(--section-border);
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+            overflow: hidden;
+            position: relative;
         }
+
         .canvas-section:focus-within {
-            box-shadow: inset 0 0 0 2px #3498db;
-            border-color: #3498db;
+            box-shadow: inset 0 0 0 2px var(--accent-blue);
         }
 
         .canvas-section h3 {
-            margin-top: 0; margin-bottom: 10px; font-size: 1em;
-            background-color: #ecf0f1; padding: 8px; 
-            border-bottom: 1px solid #bdc3c7; color: #2c3e50;
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 0.95em;
+            background-color: #ecf0f1;
+            padding: 8px;
+            border-bottom: 1px solid #bdc3c7;
+            color: var(--toolbar-bg);
             font-weight: 600;
-            display: flex; justify-content: space-between; align-items: center; /* flex layout for icon */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        
+
         .info-icon {
-            cursor: pointer; font-size: 16px; width: 20px; height: 20px;
-            display: inline-flex; align-items: center; justify-content: center;
-            border-radius: 50%; background: #bdc3c7; color: white;
-            transition: background 0.2, transform 0.2s;
+            cursor: pointer;
+            font-size: 16px;
+            width: 20px;
+            height: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: #bdc3c7;
+            color: white;
+            transition: background 0.2s;
         }
-        .info-icon:hover { background: #3498db; transform: scale(1.1); }
+
+        .info-icon:hover {
+            background: var(--accent-blue);
+        }
 
         .rich-text-editor {
-            flex-grow: 1; padding: 5px; border: 1px dashed transparent;
-            overflow: hidden; outline: none; min-height: 50px; line-height: 1.4;
-            user-select: text; color: #333;
+            flex-grow: 1;
+            padding: 5px;
+            outline: none;
+            line-height: 1.4;
+            user-select: text;
+            color: #333;
+            font-size: 13px;
+            overflow: hidden;
+            word-break: break-word;
         }
-        .rich-text-editor:hover { border-color: #eee; }
 
-        /* --- POST-ITS --- */
-        .post-it {
-            position: absolute; width: 150px; min-height: 130px;
-            background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%);
-            box-shadow: 2px 4px 10px rgba(0,0,0,0.2);
-            padding: 0; font-family: 'Comic Sans MS', 'Marker Felt', sans-serif;
-            font-size: 14px; color: #000; z-index: 100;
-            transform: rotate(-1deg); display: flex; flex-direction: column;
-            border-radius: 2px;
+        /* Grid Assignments */
+        #section-1 {
+            grid-area: area1;
         }
-        .post-it.active-drag {
-            z-index: 1000; box-shadow: 5px 15px 25px rgba(0,0,0,0.3);
-            transform: scale(1.05) rotate(0deg); opacity: 0.95;
+
+        #section-2 {
+            grid-area: area2;
         }
-        .post-it-header {
-            height: 25px; background-color: rgba(0,0,0,0.05);
-            cursor: grab; display: flex; justify-content: flex-end;
-            padding-right: 5px; align-items: center;
+
+        #section-3 {
+            grid-area: area3;
         }
-        .post-it-header:active { cursor: grabbing; }
-        .delete-btn {
-            cursor: pointer; font-weight: bold; color: rgba(0,0,0,0.5);
-            font-size: 16px; display: none; margin-left: auto; margin-right: 5px; line-height: 1;
+
+        #section-4 {
+            grid-area: area4;
         }
-        .post-it:hover .delete-btn { display: block; }
-        .delete-btn:hover { color: #c0392b; }
-        .post-it-body {
-            padding: 10px; flex-grow: 1; outline: none;
-            cursor: text; user-select: text; white-space: pre-wrap;
+
+        #section-5 {
+            grid-area: area5;
+        }
+
+        #section-6 {
+            grid-area: area6;
+        }
+
+        #section-7 {
+            grid-area: area7;
+        }
+
+        #section-8 {
+            grid-area: area8;
+        }
+
+        #section-9 {
+            grid-area: area9;
         }
 
         /* --- RESIZERS --- */
-        .resizer { position: absolute; background-color: transparent; z-index: 50; }
-        .resizer:hover, .resizer.dragging { background-color: #3498db; opacity: 0.5; }
-        .resizer-col { cursor: col-resize; top: 0; bottom: 0; width: 12px; margin-left: -6px; }
-        .resizer-row { cursor: row-resize; left: 0; right: 0; height: 12px; margin-top: -6px; }
+        .resizer {
+            position: absolute;
+            background-color: transparent;
+            z-index: 100;
+        }
 
-        /* --- MODAL --- */
+        .resizer:hover,
+        .resizer.dragging {
+            background-color: var(--accent-blue);
+            opacity: 0.5;
+        }
+
+        .resizer-col {
+            cursor: col-resize;
+            top: 0;
+            bottom: 0;
+            width: 10px;
+            margin-left: -5px;
+        }
+
+        .resizer-row {
+            cursor: row-resize;
+            left: 0;
+            right: 0;
+            height: 10px;
+            margin-top: -5px;
+        }
+
+        /* --- POST-ITS --- */
+        .post-it {
+            position: absolute;
+            width: 170px;
+            min-height: 130px;
+            background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%);
+            box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.2);
+            padding: 0;
+            font-family: 'Comic Sans MS', sans-serif;
+            font-size: 13px;
+            color: #000;
+            z-index: 1000;
+            transform: rotate(-1deg);
+            display: flex;
+            flex-direction: column;
+            border-radius: 2px;
+        }
+
+        .post-it.active-drag {
+            z-index: 1100;
+            box-shadow: 5px 15px 25px rgba(0, 0, 0, 0.3);
+            transform: scale(1.05) rotate(0deg);
+            opacity: 0.95;
+        }
+
+        .post-it-header {
+            height: 25px;
+            background-color: rgba(0, 0, 0, 0.05);
+            cursor: grab;
+            display: flex;
+            justify-content: flex-end;
+            padding-right: 5px;
+            align-items: center;
+        }
+
+        .post-it-header:active {
+            cursor: grabbing;
+        }
+
+        .delete-btn {
+            cursor: pointer;
+            font-weight: bold;
+            color: rgba(0, 0, 0, 0.5);
+            font-size: 16px;
+            display: none;
+            line-height: 1;
+        }
+
+        .post-it:hover .delete-btn {
+            display: block;
+        }
+
+        .post-it-body {
+            padding: 10px;
+            flex-grow: 1;
+            outline: none;
+            cursor: text;
+            user-select: text;
+            white-space: pre-wrap;
+        }
+
+        /* --- HISTORY SECTION --- */
+        .history-section {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .history-header {
+            background-color: #ecf0f1;
+            padding: 12px 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .history-header h2 {
+            font-size: 0.9em;
+            color: var(--toolbar-bg);
+            text-transform: uppercase;
+            margin: 0;
+        }
+
+        .history-content {
+            padding: 15px;
+        }
+
+        .history-content.collapsed {
+            display: none;
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9em;
+        }
+
+        .history-table th {
+            text-align: left;
+            padding: 8px;
+            border-bottom: 2px solid #ecf0f1;
+        }
+
+        .history-table td {
+            padding: 6px 8px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .history-table input {
+            width: 100%;
+            border: none;
+            background: transparent;
+            padding: 4px;
+            font-size: inherit;
+        }
+
+        .history-row-del {
+            cursor: pointer;
+            color: #e74c3c;
+            border: none;
+            background: none;
+            font-size: 1.1em;
+        }
+
+        .add-history-btn {
+            margin-top: 10px;
+            background: #95a5a6;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* --- MODALS --- */
         .modal-overlay {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.5); z-index: 3000;
-            display: none; align-items: center; justify-content: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 3000;
+            display: none;
+            align-items: center;
+            justify-content: center;
         }
-        .modal-overlay.visible { display: flex; }
-        .modal-content {
-            background: white; padding: 30px; border-radius: 8px;
-            max-width: 800px; max-height: 90vh; overflow-y: auto;
-            position: relative; box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-            font-family: 'Segoe UI', sans-serif; line-height: 1.6;
-        }
-        .modal-close {
-            position: absolute; top: 15px; right: 20px;
-            font-size: 24px; cursor: pointer; color: #888;
-            background: none; border: none; font-weight: bold;
-        }
-        .modal-close:hover { color: #333; }
-        .modal-content h2 { color: #2c3e50; margin-top: 0; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; }
-        .modal-content h3 { color: #34495e; margin-bottom: 10px; margin-top: 25px; font-size: 1.1em; }
-        .modal-content ul { margin-top: 5px; padding-left: 20px; }
-        .modal-content li { margin-bottom: 5px; }
-        .modal-content strong { color: #2c3e50; }
 
-        /* Grid Placement */
-        #section-1 { grid-area: area1; }
-        #section-2 { grid-area: area2; }
-        #section-3 { grid-area: area3; }
-        #section-4 { grid-area: area4; }
-        #section-5 { grid-area: area5; }
-        #section-6 { grid-area: area6; }
-        #section-7 { grid-area: area7; }
-        #section-8 { grid-area: area8; }
-        #section-9 { grid-area: area9; }
+        .modal-overlay.visible {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            border: none;
+            background: none;
+        }
 
         @media print {
-            body { margin: 0; padding-top: 0; background: #fff; -webkit-print-color-adjust: exact; }
-            .canvas-container { height: auto; display: grid; page-break-inside: avoid; border: none; }
-            .canvas-section { border: 1px solid #000; }
-            .rich-text-editor { border: none; }
-            .resizer, .controls-row, .file-toolbar, .bubble-toolbar { display: none; }
-            .post-it { box-shadow: none; border: 1px solid #999; background: #fff; }
+            body {
+                margin: 0;
+                padding-top: 0;
+                background: #fff;
+            }
+
+            .file-toolbar,
+            .bubble-toolbar,
+            .controls-row,
+            .add-history-btn,
+            .history-row-del,
+            .resizer {
+                display: none;
+            }
+
+            .canvas-container {
+                min-height: auto;
+                border: 1px solid #000;
+            }
+
+            .canvas-section {
+                border: 1px solid #000;
+            }
+
+            .history-content {
+                display: block !important;
+            }
+
+            .post-it {
+                border: 1px solid #999;
+                box-shadow: none;
+                background: #fff;
+            }
         }
     </style>
 </head>
+
 <body>
 
     <div class="file-toolbar">
         <span style="margin-right: 10px;">💾 Canvas Ops:</span>
-        <button class="file-btn" onclick="saveHTML('default')">Save (Download)</button>
-        <button class="file-btn secondary" onclick="saveHTML('picker')">Save As...</button>
-        <button class="file-btn secondary" onclick="toggleInfoModal()" style="margin-left: auto;">ℹ️ Info</button>
+        <button class="file-btn" onclick="saveHTML('direct')" title="Momentan geöffnete Datei überschreiben">Speichern</button>
+        <button class="file-btn secondary" onclick="saveHTML('picker')">Speichern unter...</button>
+        <button class="file-btn warning" onclick="saveHTML('default')">Download Kopie</button>
+        <button class="file-btn secondary" onclick="openSectionInfo('general')" style="margin-left: auto;">ℹ️ Info
+        </button>
     </div>
 
-    <div id="info-modal" class="modal-overlay">
-        <div class="modal-content">
-            <button class="modal-close" onclick="toggleInfoModal()">×</button>
+    <div id="section-info-modal" class="modal-overlay">
+        <div class="modal-content" id="section-info-content"><button class="modal-close" onclick="closeSectionInfo()">×</button>
             <h2>Zweck und Zielsetzung des WBF Innovation Model Canvas</h2>
-            
+
             <h3>1. Zweck</h3>
-            <p>Das Innovation Model Canvas ist das zentrale Steuerungsinstrument für die Initiierung von Proof of Concepts (PoCs) im Rahmen von Innovationsvorhaben. Es dient als gemeinsames Verständnis zwischen dem Fachamt und dem Innovationsteam. Ziel ist es, komplexe Fragestellungen auf einer einzigen Seite zu strukturieren, um Innovationsvorhaben zielgerichtet, ressourcenschonend und entscheidungsorientiert zu validieren.</p>
+            <p>Das Innovation Model Canvas ist das zentrale Steuerungsinstrument für die Initiierung von Proof of
+                Concepts (PoCs) im Rahmen von Innovationsvorhaben. Es dient als gemeinsames Verständnis zwischen dem
+                Fachamt und dem Innovationsteam. Ziel ist es, komplexe Fragestellungen auf einer einzigen Seite zu
+                strukturieren, um Innovationsvorhaben zielgerichtet, ressourcenschonend und entscheidungsorientiert zu
+                validieren.</p>
 
             <h3>2. Nutzen</h3>
-            <p>Ein PoC ist kein Selbstzweck, sondern ein Experiment zur Beantwortung einer geschäftskritischen Frage. Das Canvas stellt sicher, dass wir nicht nur technische Machbarkeit prüfen, sondern die Voraussetzungen für eine spätere Produktiv-Umsetzung schaffen.</p>
+            <p>Ein PoC ist kein Selbstzweck, sondern ein Experiment zur Beantwortung einer geschäftskritischen Frage.
+                Das Canvas stellt sicher, dass wir nicht nur technische Machbarkeit prüfen, sondern die Voraussetzungen
+                für eine spätere Produktiv-Umsetzung schaffen.</p>
             <p>Es erfüllt drei wesentliche Funktionen:</p>
             <ul>
-                <li><strong>Fokussierung:</strong> Es definiert klare Grenzen ("In-Scope" vs. "Out-of-Scope") und verhindert das unkontrollierte Anwachsen von Anforderungen während der kurzen PoC-Phase.</li>
-                <li><strong>Vorbereitung für einen Umsetzungsentscheid:</strong> Das Canvas ist so aufgebaut, dass die Ergebnisse direkt in das Factsheet für das Generalsekretariat WBF überführt werden können. Vor dem Start wird definiert, welche Daten (KPIs, Kostenindikationen, Nutzen) gemessen werden müssen, um später eine fundierte "Go / No-Go"-Entscheidung zu ermöglichen.</li>
+                <li><strong>Fokussierung:</strong> Es definiert klare Grenzen ("In-Scope" vs. "Out-of-Scope") und
+                    verhindert das unkontrollierte Anwachsen von Anforderungen während der kurzen PoC-Phase.</li>
+                <li><strong>Vorbereitung für einen Umsetzungsentscheid:</strong> Das Canvas ist so aufgebaut, dass die
+                    Ergebnisse direkt in das Factsheet für das Generalsekretariat WBF überführt werden können. Vor dem
+                    Start wird definiert, welche Daten (KPIs, Kostenindikationen, Nutzen) gemessen werden müssen, um
+                    später eine fundierte "Go / No-Go"-Entscheidung zu ermöglichen.</li>
                 <li><strong>Synchronisation:</strong> Das Canvas harmonisiert das Verständnis aller Beteiligten.
                     <ul>
-                        <li><em>Bei PULL-Vorhaben:</em> Zwingt dazu, das Problem des Amtes präzise zu isolieren, bevor über Lösungen gesprochen wird.</li>
-                        <li><em>Bei PUSH-Vorhaben:</em> Zwingt dazu, abstrakte Technologien in konkrete, wertstiftende Szenarien für die Bundesverwaltung zu übersetzen.</li>
+                        <li><em>Bei PULL-Vorhaben:</em> Zwingt dazu, das Problem des Amtes präzise zu isolieren, bevor
+                            über Lösungen gesprochen wird.</li>
+                        <li><em>Bei PUSH-Vorhaben:</em> Zwingt dazu, abstrakte Technologien in konkrete, wertstiftende
+                            Szenarien für die Bundesverwaltung zu übersetzen.</li>
                     </ul>
                 </li>
             </ul>
 
             <h3>3. Anwendung im Innovationsprozess</h3>
-            <p>Das Dokument ist ein „lebendes“ Artefakt. Es wird vor Beginn des PoCs gemeinsam ausgefüllt und dient als Freigabedokument für den Start. Am Ende des PoCs werden die Hypothesen (Feld 2) und Erfolgskriterien (Feld 5) gegen die Realität geprüft.</p>
+            <p>Das Dokument ist ein „lebendes“ Artefakt. Es wird vor Beginn des PoCs gemeinsam ausgefüllt und dient als
+                Freigabedokument für den Start. Am Ende des PoCs werden die Hypothesen (Feld 2) und Erfolgskriterien
+                (Feld 5) gegen die Realität geprüft.</p>
             <ul>
-                <li><strong>Status PULL:</strong> Fokus auf Nutzerbedürfnisse, Prozessintegration, Effizienzsteigerung und Akzeptanzkriterien des Amtes.</li>
-                <li><strong>Status PUSH:</strong> Fokus auf technologische Reife, Skalierbarkeit im WBF und potenzielle Anwendungsfälle.</li>
+                <li><strong>Status PULL:</strong> Fokus auf Nutzerbedürfnisse, Prozessintegration, Effizienzsteigerung
+                    und Akzeptanzkriterien des Amtes.</li>
+                <li><strong>Status PUSH:</strong> Fokus auf technologische Reife, Skalierbarkeit im WBF und potenzielle
+                    Anwendungsfälle.</li>
             </ul>
 
             <p style="margin-top: 20px; font-style: italic; border-left: 4px solid #27ae60; padding-left: 10px;">
-                <strong>Fazit:</strong> Nur wenn das Canvas vollständig und plausibel ausgefüllt ist, startet die Umsetzung. Dies ermöglicht einen effizienten Einsatz von Bundesmitteln und eine erhöhte Erfolgsquote bei der Überführung von Innovationen in den regulären Betrieb.
+                <strong>Fazit:</strong> Nur wenn das Canvas vollständig und plausibel ausgefüllt ist, startet die
+                Umsetzung. Dies ermöglicht einen effizienten Einsatz von Bundesmitteln und eine erhöhte Erfolgsquote bei
+                der Überführung von Innovationen in den regulären Betrieb.
             </p>
         </div>
     </div>
 
-    <div id="section-info-modal" class="modal-overlay">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeSectionInfo()">×</button>
-            <div id="section-info-content"></div>
-        </div>
+    <div id="bubble-toolbar" class="bubble-toolbar" style="left: 962.75px; top: 839.275px;">
+        <button class="editor-btn" onclick="formatDoc('bold')"><b>B</b></button>
+        <button class="editor-btn" onclick="formatDoc('italic')"><em>I</em></button>
+        <button class="editor-btn" onclick="formatDoc('insertUnorderedList')">Liste</button>
     </div>
 
-    <div id="bubble-toolbar" class="bubble-toolbar">
-        <button class="editor-btn" onclick="formatDoc('bold')" title="Bold"><b>B</b></button>
-        <button class="editor-btn" onclick="formatDoc('italic')" title="Italic"><em>I</em></button>
-        <button class="editor-btn" onclick="formatDoc('underline')" title="Underline"><u>U</u></button>
-        <div style="width:1px; background:rgba(255,255,255,0.2); margin:0 4px;"></div>
-        <button class="editor-btn" onclick="formatDoc('insertOrderedList')" title="Ordered List">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M7 6h14v2H7V6zm0 8h14v2H7v-2zm0 8h14v2H7v-2zM3 6h2v2H3V6zm0 8h2v2H3v-2zm0 8h2v2H3v-2z"/></svg>
-        </button>
-        <button class="editor-btn" onclick="formatDoc('insertUnorderedList')" title="Bullet List">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M4 6h2v2H4V6zm0 8h2v2H4v-2zm0 8h2v2H4v-2zm5-8h13v2H9v-2zm0-8h13v2H9V6zm0 16h13v2H9v-2z"/></svg>
-        </button>
-    </div>
+    <div class="main-wrapper">
+        <h1>Innovation Model Canvas</h1>
 
-    <h1>Innovation Model Canvas</h1>
+        <div class="property-section">
+            <div class="property-item"><label>Explorationsvorhaben Name</label><input type="text" id="input-name" value=""></div>
+            <div class="property-item"><label>Erstellt von</label><input type="text" id="input-creator" value=""></div>
+            <div class="property-item"><label>Datum</label><input type="date" id="input-date" value=""></div>
+            <div class="property-item"><label>Version</label><input type="text" id="input-version" value=""></div>
+        </div>
 
-    <div class="property-section">
-        <div class="property-item"><label>Explorationsvorhaben Name</label><input type="text" id="input-name" placeholder="Projektname"></div>
-        <div class="property-item"><label>Erstellt von</label><input type="text" id="input-creator" placeholder="Dein Name"></div>
-        <div class="property-item"><label>Datum</label><input type="date" id="input-date"></div>
-        <div class="property-item"><label>Version</label><input type="text" id="input-version" placeholder="v1.0"></div>
-    </div>
+        <div class="controls-row">
+            <div class="postit-source" draggable="true" id="new-postit-source">
+                <span>+ Neue Haftnotiz</span>
+            </div>
+        </div>
 
-    <div class="controls-row">
-        <div class="postit-source" draggable="true" id="new-postit-source">
-            <span>+ New Sticky Note</span>
-        </div>
-    </div>
+        <div class="canvas-container" id="canvas-grid" style="grid-template-columns: 16.3303% 16.3303% 16.3303% 16.3303% 16.3303%; grid-template-rows: 34.7382% 28.4% 17.6456%;">
+            <div class="canvas-section" id="section-1">
+                <h3>1. Ausgangslage <span class="info-icon" onclick="openSectionInfo(1)">i</span></h3>
+                <div class="rich-text-editor" contenteditable="true" style="font-size: 18px;"><br></div>
+            </div>
+            <div class="canvas-section" id="section-2">
+                <h3>2. Lösung &amp; Hypothese <span class="info-icon" onclick="openSectionInfo(2)">i</span></h3>
+                <div class="rich-text-editor" contenteditable="true" style="font-size: 18px;"><br></div>
+            </div>
+            <div class="canvas-section" id="section-3">
+                <h3>3. Mehrwert <span class="info-icon" onclick="openSectionInfo(3)">i</span></h3>
+                <div class="rich-text-editor" contenteditable="true" style="font-size: 18px;"><br></div>
+            </div>
+            <div class="canvas-section" id="section-4">
+                <h3>4. Stakeholder / User <span class="info-icon" onclick="openSectionInfo(4)">i</span></h3>
+                <div class="rich-text-editor" contenteditable="true" style="font-size: 18px;"><br></div>
+            </div>
+            <div class="canvas-section" id="section-7">
+                <h3>7. Daten und Compliance <span class="info-icon" onclick="openSectionInfo(7)">i</span></h3>
+                <div class="rich-text-editor" contenteditable="true" style="font-size: 18px;"><br></div>
+            </div>
+            <div class="canvas-section" id="section-5">
+                <h3>5. Erfolgskriterien <span class="info-icon" onclick="openSectionInfo(5)">i</span></h3>
+                <div class="rich-text-editor" contenteditable="true" style="font-size: 18px;"><br></div>
+            </div>
+            <div class="canvas-section" id="section-9">
+                <h3>9. Risiken <span class="info-icon" onclick="openSectionInfo(9)">i</span></h3>
+                <div class="rich-text-editor" contenteditable="true" style="font-size: 18px;"><br></div>
+            </div>
+            <div class="canvas-section" id="section-6">
+                <h3>6. Perspektiven <span class="info-icon" onclick="openSectionInfo(6)">i</span></h3>
+                <div class="rich-text-editor" contenteditable="true" style="font-size: 18px;"><br></div>
+            </div>
+            <div class="canvas-section" id="section-8">
+                <h3>8. Ressourcen und Zeithorizont <span class="info-icon" onclick="openSectionInfo(8)">i</span></h3>
+                <div class="rich-text-editor" contenteditable="true" style="font-size: 18px;"><br></div>
+            </div>
 
-    <div class="canvas-container" id="canvas-grid">
-        <div class="canvas-section" id="section-1">
-            <h3>1. Ausgangslage <span class="info-icon" onclick="openSectionInfo(1)">i</span></h3>
-            <div class="rich-text-editor" contenteditable="true"></div>
-        </div>
-        <div class="canvas-section" id="section-2">
-            <h3>2. Lösung & Hypothese <span class="info-icon" onclick="openSectionInfo(2)">i</span></h3>
-            <div class="rich-text-editor" contenteditable="true"></div>
-        </div>
-        <div class="canvas-section" id="section-3">
-            <h3>3. Mehrwert <span class="info-icon" onclick="openSectionInfo(3)">i</span></h3>
-            <div class="rich-text-editor" contenteditable="true"></div>
-        </div>
-        <div class="canvas-section" id="section-4">
-            <h3>4. Stakeholder / User <span class="info-icon" onclick="openSectionInfo(4)">i</span></h3>
-            <div class="rich-text-editor" contenteditable="true"></div>
-        </div>
-        <div class="canvas-section" id="section-7">
-            <h3>7. Daten und Compliance <span class="info-icon" onclick="openSectionInfo(7)">i</span></h3>
-            <div class="rich-text-editor" contenteditable="true"></div>
-        </div>
-        <div class="canvas-section" id="section-5">
-            <h3>5. Erfolgskriterien <span class="info-icon" onclick="openSectionInfo(5)">i</span></h3>
-            <div class="rich-text-editor" contenteditable="true"></div>
-        </div>
-        <div class="canvas-section" id="section-9">
-            <h3>9. Risiken <span class="info-icon" onclick="openSectionInfo(9)">i</span></h3>
-            <div class="rich-text-editor" contenteditable="true"></div>
-        </div>
-        <div class="canvas-section" id="section-6">
-            <h3>6. Perspektiven <span class="info-icon" onclick="openSectionInfo(6)">i</span></h3>
-            <div class="rich-text-editor" contenteditable="true"></div>
-        </div>
-        <div class="canvas-section" id="section-8">
-            <h3>8. Ressourcen und Zeithorizont <span class="info-icon" onclick="openSectionInfo(8)">i</span></h3>
-            <div class="rich-text-editor" contenteditable="true"></div>
-        </div>
-    </div>
-
-<script>
-    /* =========================================
-       1. FANCY EDITOR LOGIC (FIXED)
-       ========================================= */
-    let hideTimeout = null;
-
-    function initFancyEditor() {
-        const toolbar = document.getElementById('bubble-toolbar');
-        const editors = document.querySelectorAll('.rich-text-editor');
-        
-        editors.forEach(editor => {
-            editor.addEventListener('focus', () => {
-                // IMPORTANT: Clear any pending hide timer immediately
-                if (hideTimeout) clearTimeout(hideTimeout);
-                showToolbar(editor, toolbar);
-            });
             
-            editor.addEventListener('input', () => {
-                updateToolbarPos(editor, toolbar);
-                autoResizeGlobal(); 
+            
+            
+        </div>
+
+        <div class="history-section">
+            <div class="history-header" onclick="toggleHistory()">
+                <h2>Änderungshistorie</h2>
+                <span class="history-toggle-icon" id="history-toggle-icon">[-]</span>
+            </div>
+            <div class="history-content" id="history-content">
+                <table class="history-table" id="history-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 80px;">Version</th>
+                            <th style="width: 120px;">Datum</th>
+                            <th style="width: 150px;">Bearbeiter</th>
+                            <th>Bemerkung / Validierungsstatus</th>
+                            <th class="history-actions-col" style="width: 40px;"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                    </tbody>
+                </table>
+                <button class="add-history-btn" onclick="addHistoryRow()">+ Zeile hinzufügen</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let hideTimeout = null;
+        let currentFileHandle = null;
+
+        /* --- AUTO SCALING & EDITOR --- */
+        function initFancyEditor() {
+            const toolbar = document.getElementById('bubble-toolbar');
+            document.querySelectorAll('.rich-text-editor').forEach(editor => {
+                editor.addEventListener('focus', () => { if (hideTimeout) clearTimeout(hideTimeout); showToolbar(editor, toolbar); });
+                editor.addEventListener('input', () => { updateToolbarPos(editor, toolbar); autoResizeGlobal(); });
+                editor.addEventListener('blur', () => { hideTimeout = setTimeout(() => { if (!toolbar.contains(document.activeElement)) toolbar.classList.remove('visible'); }, 200); });
             });
-
-            editor.addEventListener('blur', (e) => {
-                // Set timer to hide. If another cell is clicked, 'focus' will run 
-                // first and clear this, keeping the toolbar visible.
-                hideTimeout = setTimeout(() => {
-                    if (!toolbar.contains(document.activeElement)) {
-                        toolbar.classList.remove('visible');
-                    }
-                }, 200);
-            });
-        });
-
-        // Prevent toolbar from stealing focus closes
-        toolbar.addEventListener('mousedown', (e) => {
-            e.preventDefault(); 
-        });
-    }
-
-    function showToolbar(editor, toolbar) {
-        toolbar.classList.add('visible');
-        updateToolbarPos(editor, toolbar);
-    }
-
-    function updateToolbarPos(editor, toolbar) {
-        // Only calculate if visible to save resources
-        if(!toolbar.classList.contains('visible')) return;
-        
-        const toolbarRect = toolbar.getBoundingClientRect();
-        
-        // Find the Header of the section we are editing
-        const section = editor.closest('.canvas-section');
-        const header = section.querySelector('h3');
-        const headerRect = header.getBoundingClientRect();
-
-        // Center on header
-        const left = headerRect.left + (headerRect.width / 2) - (toolbarRect.width / 2);
-        // Position above header
-        const top = headerRect.top - toolbarRect.height - 12;
-
-        toolbar.style.left = left + 'px';
-        toolbar.style.top = (top + window.scrollY) + 'px';
-    }
-
-    function formatDoc(cmd, value=null) {
-        if(value) document.execCommand(cmd, false, value);
-        else document.execCommand(cmd);
-    }
-
-    /* =========================================
-       2. FILE SAVING LOGIC
-       ========================================= */
-    async function saveHTML(mode) {
-        const dateRaw = document.getElementById('input-date').value || new Date().toISOString().split('T')[0];
-        const dateStr = dateRaw.replace(/-/g, '');
-        let nameRaw = document.getElementById('input-name').value || 'Unbenannt';
-        const nameStr = nameRaw.replace(/\s+/g, '_');
-        let verRaw = document.getElementById('input-version').value || 'v1';
-        const verStr = verRaw.replace(/\s+/g, '_');
-        const fileName = `${dateStr}_${nameStr}_${verStr}.html`;
-
-        const clone = document.documentElement.cloneNode(true);
-        const originalInputs = document.querySelectorAll('input');
-        const cloneInputs = clone.querySelectorAll('input');
-        originalInputs.forEach((input, index) => {
-            if (cloneInputs[index]) cloneInputs[index].setAttribute('value', input.value);
-        });
-        
-        const cloneToolbar = clone.querySelector('#bubble-toolbar');
-        if(cloneToolbar) cloneToolbar.classList.remove('visible');
-
-        const fileContent = "<!DOCTYPE html>\n" + clone.outerHTML;
-
-        if (mode === 'picker' && window.showSaveFilePicker) {
-            try {
-                const handle = await window.showSaveFilePicker({
-                    suggestedName: fileName,
-                    types: [{ description: 'HTML File', accept: {'text/html': ['.html']} }],
-                });
-                const writable = await handle.createWritable();
-                await writable.write(fileContent);
-                await writable.close();
-                alert('File saved successfully!');
-            } catch (err) { console.log(err); }
-        } else {
-            const blob = new Blob([fileContent], { type: 'text/html' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = fileName;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            toolbar.addEventListener('mousedown', (e) => e.preventDefault());
         }
-    }
 
-    /* =========================================
-       3. TEXT SCALING & RESIZING
-       ========================================= */
-    function autoResizeGlobal() {
-        const editors = document.querySelectorAll('.rich-text-editor');
-        let currentSize = 24; const minSize = 8;    
-        function checkAllFit(size) {
-            let allFit = true;
-            editors.forEach(editor => {
+        function showToolbar(editor, toolbar) { toolbar.classList.add('visible'); updateToolbarPos(editor, toolbar); }
+
+        function updateToolbarPos(editor, toolbar) {
+            if (!toolbar.classList.contains('visible')) return;
+            const h = editor.closest('.canvas-section').querySelector('h3').getBoundingClientRect();
+            const tr = toolbar.getBoundingClientRect();
+            toolbar.style.left = (h.left + h.width / 2 - tr.width / 2) + 'px';
+            toolbar.style.top = (h.top - tr.height - 12 + window.scrollY) + 'px';
+        }
+
+        function formatDoc(cmd) { document.execCommand(cmd); }
+
+        function autoResizeGlobal() {
+            document.querySelectorAll('.rich-text-editor').forEach(editor => {
+                let size = 18;
                 editor.style.fontSize = size + 'px';
-                if (editor.scrollHeight > editor.clientHeight || editor.scrollWidth > editor.clientWidth) allFit = false;
-            });
-            return allFit;
-        }
-        while (currentSize > minSize) { if (checkAllFit(currentSize)) break; currentSize--; }
-        editors.forEach(editor => { editor.style.fontSize = currentSize + 'px'; });
-    }
-
-    function initGridResizers() {
-        const grid = document.querySelector('.canvas-container');
-        if(!grid) return; 
-        const computedStyle = window.getComputedStyle(grid);
-        grid.style.gridTemplateColumns = computedStyle.gridTemplateColumns;
-        grid.style.gridTemplateRows = computedStyle.gridTemplateRows;
-
-        const colTracks = grid.style.gridTemplateColumns.split(' ');
-        const gap = parseFloat(computedStyle.gap) || 0;
-        let currentLeft = 0;
-        colTracks.forEach((trackWidth, index) => {
-            if (index === colTracks.length - 1) return;
-            currentLeft += parseFloat(trackWidth) + gap;
-            const resizer = document.createElement('div');
-            resizer.classList.add('resizer', 'resizer-col');
-            resizer.style.left = (currentLeft - gap/2) + 'px';
-            resizer.dataset.index = index;
-            createDraggable(resizer, grid, 'col');
-            grid.appendChild(resizer);
-        });
-
-        const rowTracks = grid.style.gridTemplateRows.split(' ');
-        let currentTop = 0;
-        rowTracks.forEach((trackHeight, index) => {
-            if (index === rowTracks.length - 1) return;
-            currentTop += parseFloat(trackHeight) + gap;
-            const resizer = document.createElement('div');
-            resizer.classList.add('resizer', 'resizer-row');
-            resizer.style.top = (currentTop - gap/2) + 'px';
-            resizer.dataset.index = index;
-            createDraggable(resizer, grid, 'row');
-            grid.appendChild(resizer);
-        });
-    }
-
-    function createDraggable(resizer, grid, type) {
-        let startPos = 0; let startSizes = [];
-        resizer.addEventListener('mousedown', (e) => {
-            e.preventDefault();
-            resizer.classList.add('dragging');
-            startPos = (type === 'col') ? e.clientX : e.clientY;
-            if (type === 'col') startSizes = grid.style.gridTemplateColumns.split(' ').map(parseFloat);
-            else startSizes = grid.style.gridTemplateRows.split(' ').map(parseFloat);
-            
-            const onMouseMove = (e) => {
-                const currentPos = (type === 'col') ? e.clientX : e.clientY;
-                const delta = currentPos - startPos;
-                const index = parseInt(resizer.dataset.index);
-                const newSize1 = startSizes[index] + delta;
-                const newSize2 = startSizes[index + 1] - delta;
-                if (newSize1 > 50 && newSize2 > 50) {
-                    const newTracks = [...startSizes];
-                    newTracks[index] = newSize1;
-                    newTracks[index + 1] = newSize2;
-                    const val = newTracks.map(px => px + 'px').join(' ');
-                    if (type === 'col') { grid.style.gridTemplateColumns = val; updateResizerPositions(grid, 'col'); } 
-                    else { grid.style.gridTemplateRows = val; updateResizerPositions(grid, 'row'); }
-                    autoResizeGlobal();
+                while (size > 7 && editor.scrollHeight > editor.clientHeight) {
+                    size--;
+                    editor.style.fontSize = size + 'px';
                 }
-            };
-            const onMouseUp = () => {
-                resizer.classList.remove('dragging');
-                document.removeEventListener('mousemove', onMouseMove);
-                document.removeEventListener('mouseup', onMouseUp);
-            };
-            document.addEventListener('mousemove', onMouseMove);
-            document.addEventListener('mouseup', onMouseUp);
-        });
-    }
-
-    function updateResizerPositions(grid, type) {
-        const tracks = (type === 'col') ? grid.style.gridTemplateColumns.split(' ') : grid.style.gridTemplateRows.split(' ');
-        const resizers = grid.querySelectorAll(`.resizer-${type}`);
-        const gap = parseFloat(window.getComputedStyle(grid).gap) || 0;
-        let currentPos = 0;
-        tracks.forEach((size, i) => {
-            currentPos += parseFloat(size) + gap;
-            if (resizers[i]) {
-                if (type === 'col') resizers[i].style.left = (currentPos - gap/2) + 'px';
-                else resizers[i].style.top = (currentPos - gap/2) + 'px';
-            }
-        });
-    }
-
-    /* =========================================
-       4. POST-IT LOGIC
-       ========================================= */
-    let dragOffsetX = 0; let dragOffsetY = 0;
-
-    function initPostItSystem() {
-        const container = document.querySelector('.canvas-container');
-        const newSource = document.getElementById('new-postit-source');
-
-        newSource.addEventListener('dragstart', (e) => {
-            e.dataTransfer.setData('type', 'new');
-            e.dataTransfer.effectAllowed = 'copy';
-            dragOffsetX = 70; dragOffsetY = 60;
-        });
-
-        container.addEventListener('dragover', (e) => { e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; });
-        container.addEventListener('drop', (e) => {
-            e.preventDefault();
-            const type = e.dataTransfer.getData('type');
-            if (type === 'new') {
-                const rect = container.getBoundingClientRect();
-                createPostIt(container, e.clientX - rect.left - dragOffsetX, e.clientY - rect.top - dragOffsetY);
-            }
-        });
-
-        document.querySelectorAll('.post-it').forEach(note => {
-           const header = note.querySelector('.post-it-header');
-           const delBtn = note.querySelector('.delete-btn');
-           if(delBtn) delBtn.onclick = () => note.remove();
-           if(header) makeElementDraggable(note, header);
-        });
-    }
-
-    function createPostIt(parent, x, y, content = "Comment...") {
-        const div = document.createElement('div');
-        div.classList.add('post-it');
-        div.style.left = x + 'px'; div.style.top = y + 'px';
-        
-        const header = document.createElement('div'); header.classList.add('post-it-header');
-        const delBtn = document.createElement('span'); delBtn.innerText = 'X'; delBtn.classList.add('delete-btn');
-        delBtn.onmousedown = (e) => { e.stopPropagation(); }; 
-        delBtn.onclick = () => div.remove();
-        
-        const body = document.createElement('div'); body.classList.add('post-it-body');
-        body.contentEditable = true; body.innerText = content;
-
-        header.appendChild(delBtn); div.appendChild(header); div.appendChild(body);
-        parent.appendChild(div);
-        makeElementDraggable(div, header);
-    }
-
-    function makeElementDraggable(element, handle) {
-        let isDragging = false;
-        let startX, startY, initialLeft, initialTop;
-
-        handle.addEventListener('mousedown', (e) => {
-            e.preventDefault();
-            isDragging = true;
-            element.classList.add('active-drag');
-            startX = e.clientX; startY = e.clientY;
-            initialLeft = parseInt(element.style.left || 0);
-            initialTop = parseInt(element.style.top || 0);
-            document.addEventListener('mousemove', onMouseMove);
-            document.addEventListener('mouseup', onMouseUp);
-        });
-
-        function onMouseMove(e) {
-            if (!isDragging) return;
-            const dx = e.clientX - startX;
-            const dy = e.clientY - startY;
-            element.style.left = (initialLeft + dx) + 'px';
-            element.style.top = (initialTop + dy) + 'px';
+            });
         }
 
-        function onMouseUp() {
-            isDragging = false;
-            element.classList.remove('active-drag');
-            document.removeEventListener('mousemove', onMouseMove);
-            document.removeEventListener('mouseup', onMouseUp);
+        /* --- RESPONSIVE GRID RESIZING (RATIO BASED IN %) --- */
+        function initGridResizers() {
+            const grid = document.querySelector('.canvas-container');
+            if (!grid) return;
+
+            grid.querySelectorAll('.resizer').forEach(r => r.remove());
+
+            const computed = window.getComputedStyle(grid);
+
+            // Save defaults if empty
+            if (!grid.style.gridTemplateColumns) grid.style.gridTemplateColumns = computed.gridTemplateColumns;
+            if (!grid.style.gridTemplateRows) grid.style.gridTemplateRows = computed.gridTemplateRows;
+
+            const colsPx = computed.gridTemplateColumns.split(' ').map(parseFloat);
+            let curL = 0;
+            colsPx.forEach((w, i) => {
+                if (i === colsPx.length - 1) return;
+                curL += w + 10;
+                const r = document.createElement('div');
+                r.className = 'resizer resizer-col';
+                r.style.left = (curL - 5) + 'px';
+                r.dataset.index = i;
+                bindDraggableResizer(r, grid, 'col');
+                grid.appendChild(r);
+            });
+
+            const rowsPx = computed.gridTemplateRows.split(' ').map(parseFloat);
+            let curT = 0;
+            rowsPx.forEach((h, i) => {
+                if (i === rowsPx.length - 1) return;
+                curT += h + 10;
+                const r = document.createElement('div');
+                r.className = 'resizer resizer-row';
+                r.style.top = (curT - 5) + 'px';
+                r.dataset.index = i;
+                bindDraggableResizer(r, grid, 'row');
+                grid.appendChild(r);
+            });
         }
-    }
 
-    /* =========================================
-       5. INITIALIZATION
-       ========================================= */
-    function toggleInfoModal() {
-        const modal = document.getElementById('info-modal');
-        modal.classList.toggle('visible');
-    }
+        function bindDraggableResizer(resizer, grid, type) {
+            let start, sizesPx, gridRect;
+            resizer.onmousedown = (e) => {
+                e.preventDefault();
+                resizer.classList.add('dragging');
+                start = (type === 'col') ? e.clientX : e.clientY;
+                gridRect = grid.getBoundingClientRect();
 
-    const sectionInfos = {
-        1: `
+                const computed = window.getComputedStyle(grid);
+                const tracks = (type === 'col') ? computed.gridTemplateColumns : computed.gridTemplateRows;
+                sizesPx = tracks.split(' ').map(parseFloat);
+
+                const move = (ev) => {
+                    const delta = ((type === 'col') ? ev.clientX : ev.clientY) - start;
+                    const idx = parseInt(resizer.dataset.index);
+                    const n1 = sizesPx[idx] + delta;
+                    const n2 = sizesPx[idx + 1] - delta;
+
+                    if (n1 > 50 && n2 > 50) {
+                        const newTracksPx = [...sizesPx];
+                        newTracksPx[idx] = n1;
+                        newTracksPx[idx + 1] = n2;
+
+                        const totalSize = (type === 'col') ? gridRect.width : gridRect.height;
+                        const newTracksPct = newTracksPx.map(px => (px / totalSize * 100).toFixed(4) + '%');
+
+                        if (type === 'col') grid.style.gridTemplateColumns = newTracksPct.join(' ');
+                        else grid.style.gridTemplateRows = newTracksPct.join(' ');
+
+                        updateResizerPositions(grid, type);
+                        autoResizeGlobal();
+                    }
+                };
+                const up = () => {
+                    resizer.classList.remove('dragging');
+                    document.removeEventListener('mousemove', move);
+                    document.removeEventListener('mouseup', up);
+                    initGridResizers();
+                };
+                document.addEventListener('mousemove', move);
+                document.addEventListener('mouseup', up);
+            };
+        }
+
+        function updateResizerPositions(grid, type) {
+            const computed = window.getComputedStyle(grid);
+            const tracksPx = (type === 'col') ? computed.gridTemplateColumns.split(' ').map(parseFloat) : computed.gridTemplateRows.split(' ').map(parseFloat);
+            const resizers = grid.querySelectorAll(`.resizer-${type}`);
+            let cur = 0;
+            tracksPx.forEach((sz, i) => {
+                if (i === tracksPx.length - 1) return;
+                cur += sz + 10;
+                if (resizers[i]) {
+                    if (type === 'col') resizers[i].style.left = (cur - 5) + 'px';
+                    else resizers[i].style.top = (cur - 5) + 'px';
+                }
+            });
+        }
+
+        /* --- RESPONSIVE SAVING LOGIC (CLEANED) --- */
+        async function saveHTML(mode) {
+            const grid = document.querySelector('.canvas-container');
+            const rect = grid.getBoundingClientRect();
+            const clone = document.documentElement.cloneNode(true);
+
+            // Sync Inputs
+            document.querySelectorAll('input').forEach((inp, idx) => {
+                clone.querySelectorAll('input')[idx].setAttribute('value', inp.value);
+            });
+
+            // Persist Grid als %
+            const cloneGrid = clone.querySelector('.canvas-container');
+            const computed = window.getComputedStyle(grid);
+            const colsPx = computed.gridTemplateColumns.split(' ').map(parseFloat);
+            const rowsPx = computed.gridTemplateRows.split(' ').map(parseFloat);
+
+            const colPercent = colsPx.map(c => (c / rect.width * 100).toFixed(4) + '%').join(' ');
+            const rowPercent = rowsPx.map(r => (r / rect.height * 100).toFixed(4) + '%').join(' ');
+
+            cloneGrid.style.gridTemplateColumns = colPercent;
+            cloneGrid.style.gridTemplateRows = rowPercent;
+
+            // Clean UI Elements
+            clone.querySelectorAll('.resizer').forEach(r => r.remove());
+            const tb = clone.querySelector('#bubble-toolbar');
+            if (tb) tb.classList.remove('visible');
+
+            // NEU: Entferne alle eventuell injizierten Skripte aus dem <head> Bereich für eine saubere Datei
+            clone.querySelectorAll('head script').forEach(script => script.remove());
+
+            const ct = "<!DOCTYPE html>\n" + clone.outerHTML;
+            const nameStr = (document.getElementById('input-name').value || 'Innovation_Canvas').replace(/\s+/g, '_');
+            const dateStr = (document.getElementById('input-date').value || '').replace(/-/g, '');
+            const verStr = (document.getElementById('input-version').value || '').replace(/\s+/g, '_');
+            const fn = `${dateStr}_${nameStr}_${verStr}.html`;
+
+            if (mode === 'direct') {
+                if (!window.showSaveFilePicker) {
+                    alert('Direktes Speichern wird von diesem Browser nicht unterstützt. Bitte "Download Kopie" verwenden.');
+                    return;
+                }
+                try {
+                    if (!currentFileHandle) {
+                        // Ask user to select the existing file to grant overwrite permissions
+                        currentFileHandle = await window.showSaveFilePicker({ 
+                            suggestedName: fn, 
+                            types: [{ accept: { 'text/html': ['.html'] } }] 
+                        });
+                    }
+                    const w = await currentFileHandle.createWritable();
+                    await w.write(ct); 
+                    await w.close();
+                    msg('Datei überschrieben. Lade Seite neu...');
+                    setTimeout(() => window.location.reload(), 1500);
+                    return;
+                } catch (e) {
+                    console.error(e);
+                    msg('Speichern abgebrochen oder fehlgeschlagen.');
+                    return;
+                }
+            }
+
+            if (mode === 'picker' && window.showSaveFilePicker) {
+                try {
+                    currentFileHandle = await window.showSaveFilePicker({ suggestedName: fn, types: [{ accept: { 'text/html': ['.html'] } }] });
+                    const w = await currentFileHandle.createWritable();
+                    await w.write(ct); await w.close();
+                    msg('Datei gespeichert.');
+                } catch (e) { }
+            } else {
+                const b = new Blob([ct], { type: 'text/html' });
+                const l = document.createElement('a'); l.href = URL.createObjectURL(b); l.download = fn; l.click();
+            }
+        }
+
+        function msg(t) {
+            const d = document.createElement('div');
+            d.style = "position: fixed; bottom: 20px; right: 20px; background: #27ae60; color: white; padding: 10px 20px; border-radius: 4px; z-index: 5000;";
+            d.innerText = t; document.body.appendChild(d); setTimeout(() => d.remove(), 3000);
+        }
+
+        function toggleHistory() {
+            const c = document.getElementById('history-content');
+            const i = document.getElementById('history-toggle-icon');
+            const coll = c.classList.toggle('collapsed');
+            i.innerText = coll ? '[+]' : '[-]';
+        }
+
+        function addHistoryRow() {
+            const b = document.querySelector('#history-table tbody');
+            const r = document.createElement('tr');
+            r.innerHTML = `<td><input type="text" placeholder="vX.X"></td><td><input type="text" placeholder="TT.MM.JJJJ"></td><td><input type="text" placeholder="Name"></td><td><input type="text" placeholder="Bemerkung..."></td><td class="history-row-del-td"><button class="history-row-del" onclick="removeHistoryRow(this)">🗑️</button></td>`;
+            b.appendChild(r);
+        }
+
+        function removeHistoryRow(btn) { if (confirm('Zeile löschen?')) btn.closest('tr').remove(); }
+
+        /* --- RESPONSIVE POST-IT SYSTEM --- */
+        function initPostItSystem() {
+            const c = document.querySelector('.canvas-container');
+            const s = document.getElementById('new-postit-source');
+
+            // 1. DRAG START
+            s.addEventListener('dragstart', (e) => {
+                e.dataTransfer.effectAllowed = 'copy';
+                e.dataTransfer.setData('type', 'new');
+            });
+
+            // 2. ERMÖGLICHE DROP
+            c.addEventListener('dragenter', (e) => { e.preventDefault(); });
+            c.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'copy';
+            });
+
+            // 3. DROP EVENT FÜR NEUE NOTIZ
+            c.addEventListener('drop', (e) => {
+                e.preventDefault();
+                if (e.dataTransfer.getData('type') === 'new') {
+                    const rect = c.getBoundingClientRect();
+                    const leftPx = e.clientX - rect.left - 85;
+                    const topPx = e.clientY - rect.top - 65;
+
+                    const leftPct = ((leftPx / rect.width) * 100).toFixed(4) + '%';
+                    const topPct = ((topPx / rect.height) * 100).toFixed(4) + '%';
+                    createPostIt(c, leftPct, topPct);
+                }
+            });
+
+            // Binde existierende Notizen wieder ein
+            document.querySelectorAll('.post-it').forEach(note => {
+                const h = note.querySelector('.post-it-header');
+                const d = note.querySelector('.delete-btn');
+                if (d) d.onclick = (e) => { e.stopPropagation(); note.remove(); };
+                if (h) makeDraggable(note, h);
+            });
+        }
+
+        function createPostIt(p, xPct, yPct, text = "Notiz...") {
+            const d = document.createElement('div'); d.className = 'post-it';
+            d.style.left = xPct; d.style.top = yPct;
+            d.innerHTML = `<div class="post-it-header"><span class="delete-btn">X</span></div><div class="post-it-body" contenteditable="true">${text}</div>`;
+            d.querySelector('.delete-btn').onclick = (e) => { e.stopPropagation(); d.remove(); };
+            p.appendChild(d); makeDraggable(d, d.querySelector('.post-it-header'));
+        }
+
+        function makeDraggable(el, h) {
+            let active = false, sx, sy, initialLeftPx, initialTopPx, rect;
+            h.onmousedown = (e) => {
+                e.preventDefault(); active = true;
+                el.classList.add('active-drag');
+                sx = e.clientX; sy = e.clientY;
+
+                const container = document.querySelector('.canvas-container');
+                rect = container.getBoundingClientRect();
+
+                const computed = window.getComputedStyle(el);
+                initialLeftPx = parseFloat(computed.left) || 0;
+                initialTopPx = parseFloat(computed.top) || 0;
+
+                el.style.left = initialLeftPx + 'px';
+                el.style.top = initialTopPx + 'px';
+
+                const move = (ev) => {
+                    if (active) {
+                        el.style.left = (initialLeftPx + ev.clientX - sx) + 'px';
+                        el.style.top = (initialTopPx + ev.clientY - sy) + 'px';
+                    }
+                };
+
+                const up = () => {
+                    active = false; el.classList.remove('active-drag');
+
+                    const finalLeftPx = parseFloat(el.style.left);
+                    const finalTopPx = parseFloat(el.style.top);
+                    el.style.left = ((finalLeftPx / rect.width) * 100).toFixed(4) + '%';
+                    el.style.top = ((finalTopPx / rect.height) * 100).toFixed(4) + '%';
+
+                    document.removeEventListener('mousemove', move);
+                    document.removeEventListener('mouseup', up);
+                };
+                document.addEventListener('mousemove', move); document.addEventListener('mouseup', up);
+            };
+        }
+
+        function openSectionInfo(id) {
+            const txt = {
+                'general': `
+            <h2>Zweck und Zielsetzung des WBF Innovation Model Canvas</h2>
+
+            <h3>1. Zweck</h3>
+            <p>Das Innovation Model Canvas ist das zentrale Steuerungsinstrument für die Initiierung von Proof of
+                Concepts (PoCs) im Rahmen von Innovationsvorhaben. Es dient als gemeinsames Verständnis zwischen dem
+                Fachamt und dem Innovationsteam. Ziel ist es, komplexe Fragestellungen auf einer einzigen Seite zu
+                strukturieren, um Innovationsvorhaben zielgerichtet, ressourcenschonend und entscheidungsorientiert zu
+                validieren.</p>
+
+            <h3>2. Nutzen</h3>
+            <p>Ein PoC ist kein Selbstzweck, sondern ein Experiment zur Beantwortung einer geschäftskritischen Frage.
+                Das Canvas stellt sicher, dass wir nicht nur technische Machbarkeit prüfen, sondern die Voraussetzungen
+                für eine spätere Produktiv-Umsetzung schaffen.</p>
+            <p>Es erfüllt drei wesentliche Funktionen:</p>
+            <ul>
+                <li><strong>Fokussierung:</strong> Es definiert klare Grenzen ("In-Scope" vs. "Out-of-Scope") und
+                    verhindert das unkontrollierte Anwachsen von Anforderungen während der kurzen PoC-Phase.</li>
+                <li><strong>Vorbereitung für einen Umsetzungsentscheid:</strong> Das Canvas ist so aufgebaut, dass die
+                    Ergebnisse direkt in das Factsheet für das Generalsekretariat WBF überführt werden können. Vor dem
+                    Start wird definiert, welche Daten (KPIs, Kostenindikationen, Nutzen) gemessen werden müssen, um
+                    später eine fundierte "Go / No-Go"-Entscheidung zu ermöglichen.</li>
+                <li><strong>Synchronisation:</strong> Das Canvas harmonisiert das Verständnis aller Beteiligten.
+                    <ul>
+                        <li><em>Bei PULL-Vorhaben:</em> Zwingt dazu, das Problem des Amtes präzise zu isolieren, bevor
+                            über Lösungen gesprochen wird.</li>
+                        <li><em>Bei PUSH-Vorhaben:</em> Zwingt dazu, abstrakte Technologien in konkrete, wertstiftende
+                            Szenarien für die Bundesverwaltung zu übersetzen.</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3>3. Anwendung im Innovationsprozess</h3>
+            <p>Das Dokument ist ein „lebendes“ Artefakt. Es wird vor Beginn des PoCs gemeinsam ausgefüllt und dient als
+                Freigabedokument für den Start. Am Ende des PoCs werden die Hypothesen (Feld 2) und Erfolgskriterien
+                (Feld 5) gegen die Realität geprüft.</p>
+            <ul>
+                <li><strong>Status PULL:</strong> Fokus auf Nutzerbedürfnisse, Prozessintegration, Effizienzsteigerung
+                    und Akzeptanzkriterien des Amtes.</li>
+                <li><strong>Status PUSH:</strong> Fokus auf technologische Reife, Skalierbarkeit im WBF und potenzielle
+                    Anwendungsfälle.</li>
+            </ul>
+
+            <p style="margin-top: 20px; font-style: italic; border-left: 4px solid #27ae60; padding-left: 10px;">
+                <strong>Fazit:</strong> Nur wenn das Canvas vollständig und plausibel ausgefüllt ist, startet die
+                Umsetzung. Dies ermöglicht einen effizienten Einsatz von Bundesmitteln und eine erhöhte Erfolgsquote bei
+                der Überführung von Innovationen in den regulären Betrieb.
+            </p>
+        `,
+                1: `
             <h2>1. Ausgangslage</h2>
             <p><strong>Leitfrage: Warum tun wir das überhaupt?</strong></p>
             <ul>
@@ -670,15 +1099,14 @@
             <p><strong>Wichtig:</strong> Keine technischen Details hier, sondern Business-Kontext.<br>
             (PUSH: Welches Szenario soll verbessert werden?)</p>
         `,
-        // Platzhalter für die anderen Sections
-        2: `
+                2: `
             <h2>2. Lösung & Hypothese</h2>
             <p><strong>Leitfrage:</strong> Was ist das Experiment?</p>
             <p><strong>Hypothese:</strong> Formulieren Sie eine Annahme, die falsifizierbar ist (z. B. "Wir glauben, dass LLMs Anfragen von Bürgern zu 80% korrekt vorformulieren können").</p>
             <p><strong>Lösung:</strong> Beschreiben Sie den PoC (App, Dashboard, Algorithmus).</p>
             <p><strong>Scope:</strong> Definieren Sie "Out-of-Scope" (Was machen wir explizit nicht?), um Erwartungen zu managen und die Timebox zu halten.</p>
         `,
-        3: `
+                3: `
             <h2>3. Mehrwert</h2>
             <p><strong>Leitfrage:</strong> Was springt dabei heraus?</p>
             <p><strong>Qualitativ:</strong> Bessere Entscheidungsqualität, höhere Mitarbeiterzufriedenheit, Imagegewinn.</p>
@@ -686,13 +1114,13 @@
             <p><strong>Strategie:</strong> Passt das Vorhaben zur Digitalstrategie der Bundesverwaltung? (Dies ist essentiell für das spätere GS-Factsheet).</p>
             <p><strong>Sicht:</strong> Beschreiben Sie den Mehrwert aus Sicht "Amt" und aus Sicht "Departement WBF".</p>
         `,
-        4: `
+                4: `
             <h2>4. Stakeholder / User</h2>
             <p><strong>Leitfrage:</strong> Mit wem arbeiten wir?</p>
             <p><strong>User:</strong> Wer bedient den PoC? Nennen Sie konkrete Personas (z.B. "Sachbearbeiterin im Rechtsdienst"). Beschreiben Sie die genaue Nutzung der einzelnen Personas – welche Aufgaben sie erledigen, welche Daten sie benötigen und wie sie mit dem System interagieren.</p>
             <p><strong>Commitment:</strong> Bei Pull‑Projekten muss hier ein Ansprechpartner stehen, der Zeit für Tests und Feedback zusichert. Ohne definierte Tester und deren Verfügbarkeit kann der PoC nicht durchgeführt werden.</p>
         `,
-        5: `
+                5: `
             <h2>5. Erfolgskriterien</h2>
             <p><strong>Leitfrage:</strong> Wann ist das Explorationsvorhaben ein Erfolg?</p>
             <p><strong>KPIs:</strong> Definieren Sie KPIs vor dem Start, um subjektive Diskussionen zu vermeiden.</p>
@@ -709,20 +1137,20 @@
             </ul>
             <p><strong>Factsheet:</strong> Diese Daten bilden das Rückgrat der Empfehlung im späteren Factsheet (Go / No-Go).</p>
         `,
-        6: `
+                6: `
             <h2>6. Perspektiven</h2>
             <p><strong>Leitfrage:</strong> Was sind die perspektivischen Möglichkeiten nach dem PoC?</p>
             <p><strong>Skalierung:</strong> Ist die Lösung ein "One-Off" für ein Amt oder eine Plattform-Lösung für das gesamte WBF (Skaleneffekte)?</p>
             <p><strong>Umsetzung:</strong> Deuten Sie an, ob später eine Eigenentwicklung ("Make") oder eine Beschaffung ("Buy") wahrscheinlich ist.</p>
         `,
-        7: `
+                7: `
             <h2>7. Daten und Compliance</h2>
             <p><strong>Leitfrage:</strong> Dürfen wir das so bauen?</p>
             <p><strong>Datenschutz:</strong> Werden Personendaten verarbeitet? Wenn ja: Liegt eine Rechtsgrundlage vor oder müssen Daten anonymisiert/synthetisiert werden?</p>
             <p><strong>Sicherheit:</strong> Wo läuft der PoC? (Cloud vs. On-Premise). Beachten Sie allfällige WBF-Cloud-Richtlinien.</p>
             <p><em>Klären Sie dies vor Start, um einen Abbruch durch den Datenschutzbeauftragten zu vermeiden.</em></p>
         `,
-        8: `
+                8: `
             <h2>8. Ressourcen und Zeithorizont</h2>
             <p><strong>Leitfrage:</strong> Wieviel Investition ist nötig?</p>
             <p><strong>Timebox:</strong> PoCs sind keine Dauerprojekte. Setzen Sie ein hartes Enddatum (z.B. 6 Wochen).</p>
@@ -733,7 +1161,7 @@
             <p><strong>Input:</strong> Was muss das Amt liefern? (Datenzugriff, Fachwissen, Lizenzen).</p>
             <p><strong>Budget:</strong> Falls interne / externe Dienstleister involviert sind, hier die Zeit- / Kostenschätzung eintragen.</p>
         `,
-        9: `
+                9: `
             <h2>9. Risiken</h2>
             <p><strong>Leitfrage:</strong> Worüber könnten wir stolpern?</p>
             <h3>Showstopper</h3>
@@ -745,46 +1173,38 @@
             <li>Ressourcenengpass im Amt während Ferienzeit</li>
             </ul>
         `
-    };
-
-    function openSectionInfo(sectionId) {
-        const modal = document.getElementById('section-info-modal');
-        const contentDiv = document.getElementById('section-info-content');
-        contentDiv.innerHTML = sectionInfos[sectionId] || '<p>Keine Info verfügbar.</p>';
-        modal.classList.add('visible');
-    }
-
-    function closeSectionInfo() {
-        document.getElementById('section-info-modal').classList.remove('visible');
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        // Close modal on outside click
-        const modal = document.getElementById('info-modal');
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                toggleInfoModal();
+            };
+            
+            const closeBtn = '<button class="modal-close" onclick="closeSectionInfo()">×</button>';
+            if (id === 'general') {
+                document.getElementById('section-info-content').innerHTML = closeBtn + txt[id];
+            } else {
+                document.getElementById('section-info-content').innerHTML = closeBtn + `<h2>Info</h2><p>${txt[id] || 'Keine Info.'}</p>`;
             }
+            document.getElementById('section-info-modal').classList.add('visible');
+        }
+        function closeSectionInfo() { document.getElementById('section-info-modal').classList.remove('visible'); }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initFancyEditor();
+            initPostItSystem();
+            setTimeout(initGridResizers, 300);
+            autoResizeGlobal();
+
+            openSectionInfo('general');
+
+            // Close modal on outside click
+            const modal = document.getElementById('section-info-modal');
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeSectionInfo();
+                }
+            });
+            
+            window.addEventListener('resize', () => { initGridResizers(); autoResizeGlobal(); });
         });
+    </script>
 
-        // Close section info modal on outside click
-        const sectionModal = document.getElementById('section-info-modal');
-        sectionModal.addEventListener('click', (e) => {
-            if (e.target === sectionModal) {
-                closeSectionInfo();
-            }
-        });
 
-        // Show info modal on startup
-        toggleInfoModal();
 
-        autoResizeGlobal();
-        document.querySelectorAll('.rich-text-editor').forEach(e => e.addEventListener('input', () => autoResizeGlobal()));
-        window.addEventListener('resize', () => autoResizeGlobal());
-        setTimeout(initGridResizers, 100);
-        initPostItSystem();
-        initFancyEditor(); 
-    });
-</script>
-</body>
-</html>
+</body></html>
