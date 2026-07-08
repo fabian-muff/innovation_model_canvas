@@ -1,0 +1,1793 @@
+<!DOCTYPE html>
+<!--
+    Copyright (c) 2026 Fabian Muff / ISCeco Innovationsteam
+    
+    This file is part of the Innovation Model Canvas.
+    
+    1. Methodik / Canvas (Inhalt & Struktur):
+       Lizenziert unter Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0).
+       Nutzung und Anpassung erlaubt, sofern Namensnennung erfolgt und unter gleichen Bedingungen weitergegeben wird.
+       
+    2. Software / Code (HTML, CSS, JS):
+       Lizenziert unter GNU Affero General Public License v3.0 (AGPLv3).
+       Nutzung und Anpassung der Software erlaubt, veränderter Quellcode muss bei Bereitstellung (auch als Webdienst) offengelegt werden.
+-->
+<html lang="de"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Innovation Model Canvas</title>
+    <style>
+        :root {
+            --primary-bg: #f8fafc;
+            --toolbar-bg: #0f172a;
+            --border-color: #cbd5e1;
+            --section-border: #e2e8f0;
+            --accent-blue: #3b82f6;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --card-radius: 12px;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 85px 24px 50px 24px;
+            background-color: var(--primary-bg);
+            color: var(--text-main);
+            user-select: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- SCROLLBAR BEAUTIFICATION --- */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.02);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(148, 163, 184, 0.5);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(100, 116, 139, 0.8);
+        }
+
+        /* --- WRAPPER FOR CONSISTENT WIDTH --- */
+        .main-wrapper {
+            width: 100%;
+            max-width: 1600px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* --- HEADER AREA --- */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 20px 24px;
+            border-radius: var(--card-radius);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid #e2e8f0;
+        }
+
+        .dashboard-title-box {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .dashboard-logo {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 22px;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+        }
+
+        .dashboard-title-text h1 {
+            margin: 0;
+            font-size: 1.6em;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: #0f172a;
+        }
+
+        .dashboard-title-text p {
+            margin: 2px 0 0 0;
+            font-size: 0.85em;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .dashboard-badge {
+            background: #f1f5f9;
+            color: #475569;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 700;
+            border: 1px solid #e2e8f0;
+        }
+
+        /* --- TOP FILE TOOLBAR --- */
+        .file-toolbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--toolbar-bg);
+            color: white;
+            padding: 12px 24px;
+            z-index: 2000;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(8px);
+            background: rgba(15, 23, 42, 0.95);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .file-toolbar span {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #94a3b8;
+            letter-spacing: 0.05em;
+        }
+
+        .file-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .file-btn:hover {
+            background: #059669;
+            transform: translateY(-1px);
+        }
+
+        .file-btn.secondary {
+            background: #3b82f6;
+        }
+
+        .file-btn.secondary:hover {
+            background: #2563eb;
+        }
+
+        .file-btn.warning {
+            background: #f97316;
+        }
+
+        .file-btn.warning:hover {
+            background: #ea580c;
+        }
+
+        /* --- FANCY FLOATING EDITOR TOOLBAR --- */
+        .bubble-toolbar {
+            position: absolute;
+            background: #1e293b;
+            padding: 6px;
+            border-radius: 8px;
+            display: none;
+            gap: 6px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3), 0 8px 10px -6px rgba(0,0,0,0.3);
+            z-index: 1500;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .bubble-toolbar.visible {
+            display: flex;
+            animation: popIn 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes popIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .bubble-toolbar::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 24px;
+            border-width: 6px;
+            border-style: solid;
+            border-color: #1e293b transparent transparent transparent;
+        }
+
+        .editor-btn {
+            background: transparent;
+            border: none;
+            color: #f1f5f9;
+            padding: 6px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+        }
+
+        .editor-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+        }
+
+        /* --- PROPERTY SECTION --- */
+        .property-section {
+            background-color: #fff;
+            padding: 24px;
+            border-radius: var(--card-radius);
+            box-shadow: var(--shadow-sm);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .property-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .property-item label {
+            font-weight: 700;
+            font-size: 0.72rem;
+            margin-bottom: 6px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .property-item input,
+        .property-item select {
+            padding: 10px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 13px;
+            color: var(--text-main);
+            background-color: #f8fafc;
+            transition: all 0.2s;
+            outline: none;
+            font-weight: 500;
+        }
+
+        .property-item input:focus,
+        .property-item select:focus {
+            border-color: var(--accent-blue);
+            background-color: #fff;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        /* --- CONTROLS ROW --- */
+        .controls-row {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            height: 45px;
+        }
+
+        .postit-source {
+            background: linear-gradient(135deg, #fef08a 0%, #fde047 100%);
+            padding: 10px 20px;
+            border: 1px solid #facc15;
+            box-shadow: var(--shadow-sm);
+            cursor: grab;
+            font-weight: 700;
+            border-radius: 30px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #854d0e;
+            font-size: 0.85em;
+            transition: all 0.2s;
+        }
+
+        .postit-source:hover {
+            transform: scale(1.03);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* --- CANVAS CONTAINER & GRID --- */
+        .canvas-container {
+            display: grid;
+            grid-template-columns: 20% 20% 20% 20% 20%;
+            grid-template-rows: 38% 32% 30%;
+            gap: 16px;
+            background-color: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            border-radius: 16px;
+            padding: 16px;
+            min-height: 950px;
+            width: 100%;
+            box-sizing: border-box;
+            position: relative;
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* --- CANVAS SECTION (CARDS) --- */
+        .canvas-section {
+            border: 1px solid #cbd5e1;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+            overflow: hidden;
+            position: relative;
+            border-radius: var(--card-radius);
+            box-shadow: var(--shadow-sm);
+            transition: box-shadow 0.2s, border-color 0.2s;
+        }
+
+        .canvas-section:focus-within {
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+            border-color: #6366f1;
+        }
+
+        /* Accent Colors - Beautiful Palette matching the modern look */
+        #section-1 { border-left: 6px solid #6366f1 !important; background-color: #faf9ff; }
+        #section-2 { border-left: 6px solid #a855f7 !important; background-color: #faf5ff; }
+        #section-3 { border-left: 6px solid #f97316 !important; background-color: #fffaf5; }
+        #section-4 { border-left: 6px solid #ec4899 !important; background-color: #fdf2f8; }
+        #section-5 { border-left: 6px solid #10b981 !important; background-color: #f0fdf4; }
+        #section-6 { border-left: 6px solid #06b6d4 !important; background-color: #f0fdfa; }
+        #section-7 { border-left: 6px solid #64748b !important; background-color: #f8fafc; }
+        #section-8 { border-left: 6px solid #eab308 !important; background-color: #fefbeb; }
+        #section-9 { border-left: 6px solid #ef4444 !important; background-color: #fef2f2; }
+
+        .canvas-section h3 {
+            margin-top: 0;
+            margin-bottom: 12px;
+            font-size: 0.95em;
+            background-color: transparent;
+            padding: 0 0 6px 0;
+            border-bottom: none;
+            color: var(--text-main);
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            letter-spacing: -0.01em;
+        }
+
+        .info-icon {
+            cursor: pointer;
+            font-size: 11px;
+            width: 22px;
+            height: 22px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: #e2e8f0;
+            color: #475569;
+            transition: all 0.2s ease;
+            font-weight: bold;
+        }
+
+        .info-icon:hover {
+            background: #475569;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        /* --- THE EDITOR --- */
+        .rich-text-editor {
+            flex-grow: 1;
+            padding: 4px;
+            outline: none;
+            line-height: 1.5;
+            user-select: text;
+            color: #334155;
+            font-size: 14px;
+            overflow-y: hidden;
+            word-break: break-word;
+            font-weight: 450;
+        }
+
+        .rich-text-editor ul {
+            margin-top: 5px;
+            padding-left: 20px;
+        }
+
+        .rich-text-editor li {
+            margin-bottom: 3px;
+        }
+
+        /* Grid Assignments */
+        #section-1 { grid-area: area1; }
+        #section-2 { grid-area: area2; }
+        #section-3 { grid-area: area3; }
+        #section-4 { grid-area: area4; }
+        #section-5 { grid-area: area5; }
+        #section-6 { grid-area: area6; }
+        #section-7 { grid-area: area7; }
+        #section-8 { grid-area: area8; }
+        #section-9 { grid-area: area9; }
+
+        /* --- LAYOUT MODES (SOLVES CLIPPING ISSUES) --- */
+        
+        /* 1. Dynamic Flow Mode (Recommended) */
+        .canvas-container.layout-flow {
+            display: grid !important;
+            grid-template-rows: auto auto auto !important;
+            min-height: auto !important;
+            height: auto !important;
+            gap: 16px !important;
+        }
+        .canvas-container.layout-flow .canvas-section {
+            height: auto !important;
+            min-height: 290px !important;
+        }
+        .canvas-container.layout-flow .rich-text-editor {
+            font-size: 14px !important;
+            overflow-y: visible !important;
+            height: auto !important;
+            max-height: none !important;
+        }
+        .canvas-container.layout-flow .resizer {
+            display: none !important;
+        }
+
+        /* 2. Fixed grid with scrollbars (No autoscale) */
+        .canvas-container.layout-scroll .rich-text-editor {
+            font-size: 14px !important;
+            overflow-y: auto !important;
+        }
+
+        /* --- SUBFIELDS SECTION 7 --- */
+        .section7-subfields {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 12px;
+            border-top: 1px dashed #cbd5e1;
+            padding-top: 12px;
+        }
+
+        .section7-subfields label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .section7-subfields input {
+            padding: 6px 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 12px;
+            background: #ffffff;
+            color: var(--text-main);
+            outline: none;
+            transition: all 0.15s;
+        }
+        .section7-subfields input:focus {
+            border-color: var(--accent-blue);
+        }
+
+        .subfield-editor {
+            border: 1px solid #cbd5e1;
+            background: #ffffff;
+            border-radius: 6px;
+            padding: 6px 10px !important;
+            min-height: 40px;
+            max-height: 70px;
+            overflow-y: auto;
+        }
+
+        /* --- RESIZERS --- */
+        .resizer {
+            position: absolute;
+            background-color: transparent;
+            z-index: 100;
+        }
+
+        .resizer:hover,
+        .resizer.dragging {
+            background-color: var(--accent-blue);
+            opacity: 0.5;
+        }
+
+        .resizer-col {
+            cursor: col-resize;
+            top: 0;
+            bottom: 0;
+            width: 10px;
+            margin-left: -5px;
+        }
+
+        .resizer-row {
+            cursor: row-resize;
+            left: 0;
+            right: 0;
+            height: 10px;
+            margin-top: -5px;
+        }
+
+        /* --- POST-ITS (STICKY NOTES) --- */
+        .post-it {
+            position: absolute;
+            width: 180px;
+            min-height: 130px;
+            background: linear-gradient(135deg, #fef08a 0%, #fde047 100%);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 13px;
+            color: #451a03;
+            z-index: 1000;
+            transform: rotate(-1deg);
+            display: flex;
+            flex-direction: column;
+            border-radius: 4px;
+            border: 1px solid #facc15;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .post-it.active-drag {
+            z-index: 1100;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            transform: scale(1.04) rotate(0deg);
+            opacity: 0.95;
+        }
+
+        .post-it-header {
+            height: 28px;
+            background-color: rgba(0, 0, 0, 0.04);
+            cursor: grab;
+            display: flex;
+            justify-content: flex-end;
+            padding-right: 8px;
+            align-items: center;
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+        }
+
+        .post-it-header:active {
+            cursor: grabbing;
+        }
+
+        .delete-btn {
+            cursor: pointer;
+            font-weight: bold;
+            color: rgba(0, 0, 0, 0.4);
+            font-size: 14px;
+            display: none;
+            line-height: 1;
+        }
+
+        .post-it:hover .delete-btn {
+            display: block;
+        }
+
+        .delete-btn:hover {
+            color: #ef4444;
+        }
+
+        .post-it-body {
+            padding: 10px;
+            flex-grow: 1;
+            outline: none;
+            cursor: text;
+            user-select: text;
+            white-space: pre-wrap;
+            font-weight: 500;
+        }
+
+        /* --- STATUS & HISTORY SECTIONS --- */
+        .status-section,
+        .history-section {
+            background-color: #fff;
+            border-radius: var(--card-radius);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .status-header,
+        .history-header {
+            background-color: #f8fafc;
+            padding: 16px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e2e8f0;
+            transition: background 0.15s;
+        }
+
+        .status-header:hover,
+        .history-header:hover {
+            background-color: #f1f5f9;
+        }
+
+        .status-header h2,
+        .history-header h2 {
+            font-size: 0.85em;
+            color: var(--text-main);
+            text-transform: uppercase;
+            margin: 0;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+        }
+
+        .status-toggle-icon,
+        .history-toggle-icon {
+            font-weight: bold;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .status-content,
+        .history-content {
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .status-content.collapsed,
+        .history-content.collapsed {
+            display: none;
+        }
+
+        .add-history-btn {
+            margin-top: 14px;
+            background: #64748b;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: background 0.15s;
+        }
+
+        .add-history-btn:hover {
+            background: #475569;
+        }
+
+        /* --- HISTORY TABLE --- */
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9em;
+        }
+
+        .history-table th {
+            text-align: left;
+            padding: 10px;
+            border-bottom: 2px solid #e2e8f0;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        .history-table td {
+            padding: 8px 10px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .history-table input {
+            width: 100%;
+            border: 1px solid transparent;
+            background: transparent;
+            padding: 6px;
+            font-size: inherit;
+            border-radius: 4px;
+            transition: all 0.15s;
+        }
+
+        .history-table input:focus {
+            border-color: #cbd5e1;
+            background: #f8fafc;
+            outline: none;
+        }
+
+        .history-row-del {
+            cursor: pointer;
+            color: #ef4444;
+            border: none;
+            background: none;
+            font-size: 1.1em;
+            transition: transform 0.15s;
+        }
+
+        .history-row-del:hover {
+            transform: scale(1.15);
+        }
+
+        /* --- MODAL WINDOWS (BLURRED OVERLAY) --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 3000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.visible {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 35px;
+            border-radius: 16px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            border: 1px solid #e2e8f0;
+        }
+
+        .modal-content h2 {
+            margin-top: 0;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: #0f172a;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 26px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            color: var(--text-muted);
+            transition: color 0.15s;
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            color: #ef4444;
+        }
+
+        /* --- RESPONSIVENESS (CONVERTS COMPLICATED GRID INTO SINGLE COLUMNS ON SMALLER DEVICES) --- */
+        @media (max-width: 1024px) {
+            body {
+                padding: 100px 16px 40px 16px;
+            }
+
+            .canvas-container {
+                display: flex !important;
+                flex-direction: column !important;
+                height: auto !important;
+                min-height: auto !important;
+                gap: 16px !important;
+            }
+
+            .canvas-section {
+                width: 100% !important;
+                height: auto !important;
+                min-height: 250px !important;
+            }
+
+            .rich-text-editor {
+                font-size: 14px !important;
+                overflow-y: visible !important;
+            }
+
+            .resizer {
+                display: none !important;
+            }
+
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+        }
+
+        /* --- PRINT STYLES --- */
+        @page {
+            size: A4 landscape;
+            margin: 6mm;
+        }
+
+        @media print {
+            body {
+                margin: 0;
+                padding-top: 0;
+                background: #fff;
+                zoom: 0.65;
+            }
+
+            .file-toolbar,
+            .bubble-toolbar,
+            .controls-row,
+            .add-history-btn,
+            .history-row-del,
+            .resizer,
+            .status-section,
+            .history-section {
+                display: none;
+            }
+
+            .canvas-container {
+                min-height: auto;
+                border: 1px solid #000;
+                background: #fff;
+                padding: 4px;
+                gap: 8px;
+            }
+
+            .canvas-section {
+                border: 1px solid #000 !important;
+                box-shadow: none !important;
+                background: #fff !important;
+            }
+
+            .property-section {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+                padding: 8px;
+                box-shadow: none;
+                border: 1px solid #000;
+            }
+
+            .post-it {
+                border: 1px solid #999;
+                box-shadow: none;
+                background: #fff;
+            }
+        }
+        
+        .copyright-footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.8em;
+            color: var(--text-muted);
+            border-top: 1px solid #e2e8f0;
+            padding-top: 15px;
+            width: 100%;
+        }
+        
+        .copyright-footer a {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .copyright-footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="file-toolbar">
+        <span>💾 Canvas Ops:</span>
+        <button class="file-btn" onclick="saveHTML('direct')" title="Momentan geöffnete Datei überschreiben">Speichern</button>
+        <button class="file-btn secondary" onclick="saveHTML('picker')">Speichern unter...</button>
+        <button class="file-btn warning" onclick="saveHTML('default')">Download Kopie</button>
+        <button class="file-btn secondary" onclick="openImportModal()">Daten importieren</button>
+        <button class="file-btn secondary" onclick="window.print()">Drucken</button>
+        <button class="file-btn secondary" onclick="openSectionInfo('general')" style="margin-left: auto;">ℹ️ Info</button>
+    </div>
+
+    <div id="section-info-modal" class="modal-overlay">
+        <div class="modal-content" id="section-info-content"><button class="modal-close" onclick="closeSectionInfo()">×</button>
+            <h2>Zweck und Zielsetzung des WBF Innovation Model Canvas</h2>
+
+            <h3>1. Zweck</h3>
+            <p>Das Innovation Model Canvas ist das zentrale Steuerungsinstrument für die Initiierung von Proof of
+                Concepts (PoCs) im Rahmen von Innovationsvorhaben. Es dient als gemeinsames Verständnis zwischen dem
+                Fachamt und dem Innovationsteam. Ziel ist es, komplexe Fragestellungen auf einer einzigen Seite zu
+                strukturieren, um Innovationsvorhaben zielgerichtet, ressourcenschonend und entscheidungsorientiert zu
+                validieren.</p>
+
+            <h3>2. Nutzen</h3>
+            <p>Ein PoC ist kein Selbstzweck, sondern ein Experiment zur Beantwortung einer geschäftskritischen Frage.
+                Das Canvas stellt sicher, dass wir nicht nur technische Machbarkeit prüfen, sondern die Voraussetzungen
+                für eine spätere Produktiv-Umsetzung schaffen.</p>
+            <p>Es erfüllt drei wesentliche Funktionen:</p>
+            <ul>
+                <li><strong>Fokussierung:</strong> Es definiert klare Grenzen ("In-Scope" vs. "Out-of-Scope") und
+                    verhindert das unkontrollierte Anwachsen von Anforderungen während der kurzen PoC-Phase.</li>
+                <li><strong>Vorbereitung für einen Umsetzungsentscheid:</strong> Das Canvas ist so aufgebaut, dass die
+                    Ergebnisse direkt in das Factsheet für das Generalsekretariat WBF überführt werden können. Vor dem
+                    Start wird definiert, welche Daten (KPIs, Kostenindikationen, Nutzen) gemessen werden müssen, um
+                    später eine fundierte "Go / No-Go"-Entscheidung zu ermöglichen.</li>
+                <li><strong>Synchronisation:</strong> Das Canvas harmonisiert das Verständnis aller Beteiligten.
+                    <ul>
+                        <li><em>Bei PULL-Vorhaben:</em> Zwingt dazu, das Problem des Amtes präzise zu isolieren, bevor
+                            über Lösungen gesprochen wird.</li>
+                        <li><em>Bei PUSH-Vorhaben:</em> Zwingt dazu, abstrakte Technologien in konkrete, wertstiftende
+                            Szenarien für die Bundesverwaltung zu übersetzen.</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3>3. Anwendung im Innovationsprozess</h3>
+            <p>Das Dokument ist ein „lebendes“ Artefakt. Es wird vor Beginn des PoCs gemeinsam ausgefüllt und dient als
+                Freigabedokument für den Start. Am Ende des PoCs werden die Hypothesen (Feld 2) und Erfolgskriterien
+                (Feld 5) gegen die Realität geprüft.</p>
+            <ul>
+                <li><strong>Status PULL:</strong> Fokus auf Nutzerbedürfnisse, Prozessintegration, Effizienzsteigerung
+                    und Akzeptanzkriterien des Amtes.</li>
+                <li><strong>Status PUSH:</strong> Fokus auf technologische Reife, Skalierbarkeit im WBF und potenzielle
+                    Anwendungsfälle.</li>
+            </ul>
+
+            <p style="margin-top: 20px; font-style: italic; border-left: 4px solid #10b981; padding-left: 10px;">
+                <strong>Fazit:</strong> Nur wenn das Canvas vollständig und plausibel ausgefüllt ist, startet die
+                Umsetzung. Dies ermöglicht einen effizienten Einsatz von Bundesmitteln und eine erhöhte Erfolgsquote bei
+                der Überführung von Innovationen in den regulären Betrieb.
+            </p>
+            
+            <hr style="margin-top: 30px; border-top: 1px solid #e2e8f0;">
+            <h3>Copyright & Lizenz</h3>
+            <p style="font-size: 0.9em; color: #555;">
+                © 2026 Fabian Muff / ISCeco Innovationsteam.<br><br>
+                Dieses Werk ("Innovation Model Canvas" – Methodik und Inhalt) ist lizenziert unter einer <strong>Creative Commons Namensnennung - Weitergabe unter gleichen Bedingungen 4.0 International Lizenz (CC BY-SA 4.0)</strong>.<br>
+                Es darf frei verwendet und angepasst werden, sofern der Urheber genannt wird und alle abgeleiteten Werke unter derselben Lizenz veröffentlicht werden.<br><br>
+                Der Software Code (HTML, CSS, JS) ist lizenziert unter der <strong>GNU Affero General Public License v3.0 (AGPLv3)</strong>, wodurch Anpassungen am Code ebenfalls offengelegt werden müssen.
+            </p>
+        </div>
+    </div>
+
+    <div id="import-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeImportModal()">×</button>
+            <h2>Daten aus Excel importieren</h2>
+            <p>Kopieren Sie eine Datenzeile aus der Excel-Liste und fügen Sie den Inhalt hier ein:</p>
+            <textarea id="import-textarea" rows="8" style="width:100%; font-family: monospace; font-size: 0.85em; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box;"></textarea>
+            <div style="margin-top:15px; display:flex; gap:10px;">
+                <button class="file-btn" onclick="runImport()">Importieren</button>
+                <button class="file-btn secondary" onclick="closeImportModal()">Abbrechen</button>
+            </div>
+            <p id="import-status" style="margin-top:8px; color: green; font-weight: 600;"></p>
+        </div>
+    </div>
+
+    <div id="bubble-toolbar" class="bubble-toolbar">
+        <button class="editor-btn" onclick="formatDoc('bold')"><b>B</b></button>
+        <button class="editor-btn" onclick="formatDoc('italic')"><em>I</em></button>
+        <button class="editor-btn" onclick="formatDoc('insertUnorderedList')">Liste</button>
+    </div>
+
+    <div class="main-wrapper">
+        <div class="dashboard-header">
+            <div class="dashboard-title-box">
+                <div class="dashboard-logo">✨</div>
+                <div class="dashboard-title-text">
+                    <h1>Innovation Model Canvas</h1>
+                    <p>ISCeco Innovationsteam &bull; Strategisches Steuerungs- und Analyseinstrument</p>
+                </div>
+            </div>
+            <div class="dashboard-badge">v2026.1 &bull; Active</div>
+        </div>
+
+        <div class="property-section">
+            <div class="property-item"><label>Titel / Vorhaben</label><input type="text" id="input-name" value=""></div>
+            <div class="property-item"><label>Erstellt von</label><input type="text" id="input-creator" value=""></div>
+            <div class="property-item"><label>Verwaltungseinheit</label><input type="text" id="input-unit" value=""></div>
+            <div class="property-item"><label>Datum</label><input type="date" id="input-date" value=""></div>
+            <div class="property-item"><label>Version</label><input type="text" id="input-version" value=""></div>
+            <div class="property-item"><label>Status</label><select id="input-status"><option value="">-- Wählen --</option><option value="Entwurf">Entwurf</option><option value="PoC läuft">PoC läuft</option><option value="In Prüfung">In Prüfung</option><option value="Abgeschlossen">Abgeschlossen</option><option value="Abgelehnt">Abgelehnt</option></select></div>
+            <div class="property-item"><label>Genehmigt durch</label><input type="text" id="input-approved-by" value=""></div>
+            <div class="property-item">
+                <label>Layout-Modus (Textfluss)</label>
+                <select id="input-layout-mode" onchange="changeLayoutMode(this.value)">
+                    <option value="flow" selected>Fließendes Layout (Wächst mit Text - Empfohlen)</option>
+                    <option value="compact">Kompaktes Gitter (Auto-Schrumpfen)</option>
+                    <option value="scroll">Gitter mit festem Text &amp; Scrollbalken</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="controls-row">
+            <div class="postit-source" draggable="true" id="new-postit-source">
+                <span>📌 Haftnotiz hinzufügen (ziehen)</span>
+            </div>
+        </div>
+
+        <div class="canvas-container layout-flow" id="canvas-grid">
+            <div class="canvas-section" id="section-1">
+                <h3>1. Ausgangslage <span class="info-icon" onclick="openSectionInfo(1)">i</span></h3>
+                <div class="rich-text-editor" contenteditable="true" style="font-size: 14px;"><br></div>
+            </div>
+            <div class="canvas-section" id="section-2">
+                <h3>2. Lösung &amp; Hypothese <span class="info-icon" onclick="openSectionInfo(2)">i</span></h3>
+                <div class="rich-text-editor" contenteditable="true" style="font-size: 14px;"><br></div>
+            </div>
+            <div class="canvas-section" id="section-3">
+                <h3>3. Mehrwert <span class="info-icon" onclick="openSectionInfo(3)">i</span></h3>
+                <div class="rich-text-editor" contenteditable="true" style="font-size: 14px;"><br></div>
+            </div>
+            <div class="canvas-section" id="section-4">
+                <h3>4. Stakeholder / User <span class="info-icon" onclick="openSectionInfo(4)">i</span></h3>
+                <div class="rich-text-editor" contenteditable="true" style="font-size: 14px;"><br></div>
+            </div>
+            <div class="canvas-section" id="section-7">
+                <h3>7. Daten und Compliance <span class="info-icon" onclick="openSectionInfo(7)">i</span></h3>
+                <div class="rich-text-editor" contenteditable="true" style="font-size: 14px; flex: 1;"><br></div>
+                <div class="section7-subfields">
+                    <div style="display: flex; flex-direction: column;">
+                        <label>7.1 Schutzbedarf (Klassifizierung)</label>
+                        <input type="text" id="input-7-1" value="" placeholder="z.B. Intern, Geheim, Öffentlich">
+                    </div>
+                    <div style="display: flex; flex-direction: column;">
+                        <label>7.2 Schutzbedarf (Personendaten)</label>
+                        <input type="text" id="input-7-2" value="" placeholder="Nein / Personendaten / Besonders schützenswert">
+                    </div>
+                    <div style="display: flex; flex-direction: column;">
+                        <label>7.3 Schutzbedarf (Massnahmen)</label>
+                        <div class="rich-text-editor subfield-editor" id="editor-7-3" contenteditable="true" style="font-size: 12px;"><br></div>
+                    </div>
+                </div>
+            </div>
+            <div class="canvas-section" id="section-5">
+                <h3>5. Erfolgskriterien <span class="info-icon" onclick="openSectionInfo(5)">i</span></h3>
+                <div class="rich-text-editor" contenteditable="true" style="font-size: 14px;"><br></div>
+            </div>
+            <div class="canvas-section" id="section-9">
+                <h3>9. Risiken <span class="info-icon" onclick="openSectionInfo(9)">i</span></h3>
+                <div class="rich-text-editor" contenteditable="true" style="font-size: 14px;"><br></div>
+            </div>
+            <div class="canvas-section" id="section-6">
+                <h3>6. Perspektiven <span class="info-icon" onclick="openSectionInfo(6)">i</span></h3>
+                <div class="rich-text-editor" contenteditable="true" style="font-size: 14px;"><br></div>
+            </div>
+            <div class="canvas-section" id="section-8">
+                <h3>8. Ressourcen und Zeithorizont <span class="info-icon" onclick="openSectionInfo(8)">i</span></h3>
+                <div class="rich-text-editor" contenteditable="true" style="font-size: 14px;"><br></div>
+            </div>
+        </div>
+
+        <div class="status-section">
+            <div class="status-header" onclick="toggleStatus()">
+                <h2>Aktueller Stand</h2>
+                <span class="status-toggle-icon" id="status-toggle-icon">[-]</span>
+            </div>
+            <div class="status-content" id="status-content">
+                <div class="rich-text-editor" id="editor-status" contenteditable="true" style="min-height: 120px; padding: 10px; font-size: 1em;"><br></div>
+            </div>
+        </div>
+
+        <div class="history-section">
+            <div class="history-header" onclick="toggleHistory()">
+                <h2>Änderungshistorie</h2>
+                <span class="history-toggle-icon" id="history-toggle-icon">[-]</span>
+            </div>
+            <div class="history-content" id="history-content">
+                <table class="history-table" id="history-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 80px;">Version</th>
+                            <th style="width: 120px;">Datum</th>
+                            <th style="width: 150px;">Bearbeiter</th>
+                            <th>Bemerkung / Validierungsstatus</th>
+                            <th class="history-actions-col" style="width: 40px;"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                    </tbody>
+                </table>
+                <button class="add-history-btn" onclick="addHistoryRow()">+ Zeile hinzufügen</button>
+            </div>
+        </div>
+        
+        <div class="copyright-footer">
+            <p>
+                © 2026 Fabian Muff / ISCeco Innovationsteam.<br>
+                Methodik lizenziert unter <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.de" target="_blank" rel="noopener noreferrer">CC BY-SA 4.0</a>. 
+                Code lizenziert unter <a href="https://www.gnu.org/licenses/agpl-3.0.de.html" target="_blank" rel="noopener noreferrer">AGPLv3</a>.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        let hideTimeout = null;
+        let currentFileHandle = null;
+
+        /* --- AUTO SCALING & EDITOR --- */
+        function initFancyEditor() {
+            const toolbar = document.getElementById('bubble-toolbar');
+            document.querySelectorAll('.rich-text-editor').forEach(editor => {
+                editor.addEventListener('focus', () => { if (hideTimeout) clearTimeout(hideTimeout); showToolbar(editor, toolbar); });
+                editor.addEventListener('input', () => { updateToolbarPos(editor, toolbar); autoResizeGlobal(); });
+                editor.addEventListener('blur', () => { hideTimeout = setTimeout(() => { if (!toolbar.contains(document.activeElement)) toolbar.classList.remove('visible'); }, 200); });
+            });
+            toolbar.addEventListener('mousedown', (e) => e.preventDefault());
+        }
+
+        function showToolbar(editor, toolbar) { toolbar.classList.add('visible'); updateToolbarPos(editor, toolbar); }
+
+        function updateToolbarPos(editor, toolbar) {
+            if (!toolbar.classList.contains('visible')) return;
+            const h = editor.closest('.canvas-section').querySelector('h3').getBoundingClientRect();
+            const tr = toolbar.getBoundingClientRect();
+            toolbar.style.left = (h.left + h.width / 2 - tr.width / 2) + 'px';
+            toolbar.style.top = (h.top - tr.height - 12 + window.scrollY) + 'px';
+        }
+
+        function formatDoc(cmd) { document.execCommand(cmd); }
+
+        function autoResizeGlobal() {
+            const mode = document.getElementById('input-layout-mode')?.value || 'flow';
+            
+            // If we are in 'flow' or 'scroll' mode, keep constant comfortable font size
+            if (mode !== 'compact') {
+                document.querySelectorAll('.rich-text-editor').forEach(editor => {
+                    if (!editor.classList.contains('subfield-editor')) {
+                        editor.style.fontSize = '14px';
+                    }
+                });
+                return;
+            }
+
+            // Compact mode auto-shrinking, strictly stops at 11px to ensure visibility
+            document.querySelectorAll('.rich-text-editor').forEach(editor => {
+                if (editor.classList.contains('subfield-editor')) return;
+                let size = 16;
+                editor.style.fontSize = size + 'px';
+                while (size > 11 && editor.scrollHeight > editor.clientHeight) {
+                    size--;
+                    editor.style.fontSize = size + 'px';
+                }
+                
+                // If it still overflows, enable neat custom scrollbars instead of going lower
+                if (editor.scrollHeight > editor.clientHeight) {
+                    editor.style.overflowY = 'auto';
+                } else {
+                    editor.style.overflowY = 'hidden';
+                }
+            });
+        }
+
+        /* --- LAYOUT MODE TOGGLER --- */
+        function changeLayoutMode(mode) {
+            const grid = document.getElementById('canvas-grid');
+            if (!grid) return;
+            
+            // Sync select values & option state for clean cloning/saving
+            const select = document.getElementById('input-layout-mode');
+            if (select) {
+                select.value = mode;
+                Array.from(select.options).forEach(opt => {
+                    if (opt.value === mode) {
+                        opt.setAttribute('selected', 'selected');
+                    } else {
+                        opt.removeAttribute('selected');
+                    }
+                });
+            }
+
+            grid.classList.remove('layout-compact', 'layout-flow', 'layout-scroll');
+            grid.classList.add('layout-' + mode);
+
+            // Re-render and trigger layouts
+            initGridResizers();
+            autoResizeGlobal();
+        }
+
+        /* --- RESPONSIVE GRID RESIZING (RATIO BASED IN %) --- */
+        function initGridResizers() {
+            const grid = document.querySelector('.canvas-container');
+            if (!grid) return;
+
+            // Remove all existing resizer bars
+            grid.querySelectorAll('.resizer').forEach(r => r.remove());
+
+            // Disable interactive resizing on non-compact layouts
+            const mode = document.getElementById('input-layout-mode')?.value || 'flow';
+            if (mode !== 'compact') return;
+
+            const computed = window.getComputedStyle(grid);
+
+            // Save default layouts if empty
+            if (!grid.style.gridTemplateColumns) grid.style.gridTemplateColumns = computed.gridTemplateColumns;
+            if (!grid.style.gridTemplateRows) grid.style.gridTemplateRows = computed.gridTemplateRows;
+
+            const colsPx = computed.gridTemplateColumns.split(' ').map(parseFloat);
+            let curL = 0;
+            colsPx.forEach((w, i) => {
+                if (i === colsPx.length - 1) return;
+                curL += w + 16; // Using modern gap spacing (16px)
+                const r = document.createElement('div');
+                r.className = 'resizer resizer-col';
+                r.style.left = (curL - 8) + 'px';
+                r.dataset.index = i;
+                bindDraggableResizer(r, grid, 'col');
+                grid.appendChild(r);
+            });
+
+            const rowsPx = computed.gridTemplateRows.split(' ').map(parseFloat);
+            let curT = 0;
+            rowsPx.forEach((h, i) => {
+                if (i === rowsPx.length - 1) return;
+                curT += h + 16; // Using modern gap spacing (16px)
+                const r = document.createElement('div');
+                r.className = 'resizer resizer-row';
+                r.style.top = (curT - 8) + 'px';
+                r.dataset.index = i;
+                bindDraggableResizer(r, grid, 'row');
+                grid.appendChild(r);
+            });
+        }
+
+        function bindDraggableResizer(resizer, grid, type) {
+            let start, sizesPx, gridRect;
+            resizer.onmousedown = (e) => {
+                e.preventDefault();
+                resizer.classList.add('dragging');
+                start = (type === 'col') ? e.clientX : e.clientY;
+                gridRect = grid.getBoundingClientRect();
+
+                const computed = window.getComputedStyle(grid);
+                const tracks = (type === 'col') ? computed.gridTemplateColumns : computed.gridTemplateRows;
+                sizesPx = tracks.split(' ').map(parseFloat);
+
+                const move = (ev) => {
+                    const delta = ((type === 'col') ? ev.clientX : ev.clientY) - start;
+                    const idx = parseInt(resizer.dataset.index);
+                    const n1 = sizesPx[idx] + delta;
+                    const n2 = sizesPx[idx + 1] - delta;
+
+                    if (n1 > 50 && n2 > 50) {
+                        const newTracksPx = [...sizesPx];
+                        newTracksPx[idx] = n1;
+                        newTracksPx[idx + 1] = n2;
+
+                        const totalSize = (type === 'col') ? gridRect.width : gridRect.height;
+                        const newTracksPct = newTracksPx.map(px => (px / totalSize * 100).toFixed(4) + '%');
+
+                        if (type === 'col') grid.style.gridTemplateColumns = newTracksPct.join(' ');
+                        else grid.style.gridTemplateRows = newTracksPct.join(' ');
+
+                        updateResizerPositions(grid, type);
+                        autoResizeGlobal();
+                    }
+                };
+                const up = () => {
+                    resizer.classList.remove('dragging');
+                    document.removeEventListener('mousemove', move);
+                    document.removeEventListener('mouseup', up);
+                    initGridResizers();
+                };
+                document.addEventListener('mousemove', move);
+                document.addEventListener('mouseup', up);
+            };
+        }
+
+        function updateResizerPositions(grid, type) {
+            const computed = window.getComputedStyle(grid);
+            const tracksPx = (type === 'col') ? computed.gridTemplateColumns.split(' ').map(parseFloat) : computed.gridTemplateRows.split(' ').map(parseFloat);
+            const resizers = grid.querySelectorAll(`.resizer-${type}`);
+            let cur = 0;
+            tracksPx.forEach((sz, i) => {
+                if (i === tracksPx.length - 1) return;
+                cur += sz + 16;
+                if (resizers[i]) {
+                    if (type === 'col') resizers[i].style.left = (cur - 8) + 'px';
+                    else resizers[i].style.top = (cur - 8) + 'px';
+                }
+            });
+        }
+
+        /* --- RESPONSIVE SAVING LOGIC (CLEANED) --- */
+        async function saveHTML(mode) {
+            const grid = document.querySelector('.canvas-container');
+            const rect = grid.getBoundingClientRect();
+            const clone = document.documentElement.cloneNode(true);
+
+            // Sync Inputs
+            document.querySelectorAll('input').forEach((inp, idx) => {
+                clone.querySelectorAll('input')[idx].setAttribute('value', inp.value);
+            });
+
+            // Sync Selects
+            document.querySelectorAll('select').forEach((sel, idx) => {
+                const cloneSel = clone.querySelectorAll('select')[idx];
+                Array.from(cloneSel.options).forEach(opt => opt.removeAttribute('selected'));
+                const match = cloneSel.querySelector(`option[value="${CSS.escape(sel.value)}"]`);
+                if (match) match.setAttribute('selected', 'selected');
+            });
+
+            // Persist Grid as %
+            const cloneGrid = clone.querySelector('.canvas-container');
+            const computed = window.getComputedStyle(grid);
+            const colsPx = computed.gridTemplateColumns.split(' ').map(parseFloat);
+            const rowsPx = computed.gridTemplateRows.split(' ').map(parseFloat);
+
+            const colPercent = colsPx.map(c => (c / rect.width * 100).toFixed(4) + '%').join(' ');
+            const rowPercent = rowsPx.map(r => (r / rect.height * 100).toFixed(4) + '%').join(' ');
+
+            cloneGrid.style.gridTemplateColumns = colPercent;
+            cloneGrid.style.gridTemplateRows = rowPercent;
+
+            // Clean UI Elements before export
+            clone.querySelectorAll('.resizer').forEach(r => r.remove());
+            const tb = clone.querySelector('#bubble-toolbar');
+            if (tb) tb.classList.remove('visible');
+
+            // Remove any dynamically injected scripts for preview safety
+            clone.querySelectorAll('head script').forEach(script => script.remove());
+
+            const ct = "<!DOCTYPE html>\n" + clone.outerHTML;
+            const nameStr = (document.getElementById('input-name').value || 'Innovation_Canvas').replace(/\s+/g, '_');
+            const dateStr = (document.getElementById('input-date').value || '').replace(/-/g, '');
+            const verStr = (document.getElementById('input-version').value || '').replace(/\s+/g, '_');
+            const fn = `${dateStr}_${nameStr}_${verStr}.html`;
+
+            if (mode === 'direct') {
+                if (!window.showSaveFilePicker) {
+                    alert('Direktes Speichern wird von diesem Browser nicht unterstützt. Bitte "Download Kopie" verwenden.');
+                    return;
+                }
+                try {
+                    if (!currentFileHandle) {
+                        currentFileHandle = await window.showSaveFilePicker({ 
+                            suggestedName: fn, 
+                            types: [{ accept: { 'text/html': ['.html'] } }] 
+                        });
+                    }
+                    const w = await currentFileHandle.createWritable();
+                    await w.write(ct); 
+                    await w.close();
+                    msg('Datei überschrieben. Lade Seite neu...');
+                    setTimeout(() => window.location.reload(), 1500);
+                    return;
+                } catch (e) {
+                    console.error(e);
+                    msg('Speichern abgebrochen oder fehlgeschlagen.');
+                    return;
+                }
+            }
+
+            if (mode === 'picker' && window.showSaveFilePicker) {
+                try {
+                    currentFileHandle = await window.showSaveFilePicker({ suggestedName: fn, types: [{ accept: { 'text/html': ['.html'] } }] });
+                    const w = await currentFileHandle.createWritable();
+                    await w.write(ct); await w.close();
+                    msg('Datei gespeichert.');
+                } catch (e) { }
+            } else {
+                const b = new Blob([ct], { type: 'text/html' });
+                const l = document.createElement('a'); l.href = URL.createObjectURL(b); l.download = fn; l.click();
+            }
+        }
+
+        function msg(t) {
+            const d = document.createElement('div');
+            d.style = "position: fixed; bottom: 20px; right: 20px; background: #10b981; color: white; padding: 12px 24px; border-radius: 8px; z-index: 5000; font-weight: 600; box-shadow: var(--shadow-lg);";
+            d.innerText = t; document.body.appendChild(d); setTimeout(() => d.remove(), 3000);
+        }
+
+        function toggleHistory() {
+            const c = document.getElementById('history-content');
+            const i = document.getElementById('history-toggle-icon');
+            const coll = c.classList.toggle('collapsed');
+            i.innerText = coll ? '[+]' : '[-]';
+        }
+
+        function toggleStatus() {
+            const c = document.getElementById('status-content');
+            const i = document.getElementById('status-toggle-icon');
+            const coll = c.classList.toggle('collapsed');
+            i.innerText = coll ? '[+]' : '[-]';
+        }
+
+        function openImportModal() {
+            document.getElementById('import-modal').style.display = 'flex';
+            document.getElementById('import-textarea').value = '';
+            document.getElementById('import-status').innerText = '';
+        }
+
+        function closeImportModal() {
+            document.getElementById('import-modal').style.display = 'none';
+        }
+
+        function parseCSVRow(text) {
+            if (text.indexOf('\t') !== -1) {
+                return text.split('\t').map(s => s.trim());
+            }
+            const fields = [];
+            let current = '';
+            let inQuotes = false;
+            for (let i = 0; i < text.length; i++) {
+                const c = text[i];
+                if (c === '"') {
+                    if (inQuotes && text[i + 1] === '"') {
+                        current += '"';
+                        i++;
+                    } else {
+                        inQuotes = !inQuotes;
+                    }
+                } else if (c === ',' && !inQuotes) {
+                    fields.push(current.trim());
+                    current = '';
+                } else {
+                    current += c;
+                }
+            }
+            fields.push(current.trim());
+            return fields;
+        }
+
+        function stripHTML(html) {
+            const temp = document.createElement('div');
+            temp.innerHTML = html;
+            return temp.textContent || temp.innerText || '';
+        }
+
+        function convertDateFormat(dateStr) {
+            if (!dateStr) return '';
+            const parts = dateStr.split('.');
+            if (parts.length === 3) {
+                return `${parts[2]}-${parts[1]}-${parts[0]}`;
+            }
+            return dateStr;
+        }
+
+        function runImport() {
+            const text = document.getElementById('import-textarea').value.trim();
+            if (!text) {
+                document.getElementById('import-status').innerText = 'Bitte geben Sie Daten ein.';
+                return;
+            }
+            const fields = parseCSVRow(text);
+            if (fields.length < 20) {
+                document.getElementById('import-status').innerText = `Fehler: Es wurden nur ${fields.length} Felder gefunden, 20 erwartet.`;
+                return;
+            }
+            try {
+                document.getElementById('input-name').value = stripHTML(fields[0]);
+                document.getElementById('input-creator').value = stripHTML(fields[1]);
+                document.getElementById('input-unit').value = stripHTML(fields[2]);
+                document.getElementById('input-date').value = convertDateFormat(stripHTML(fields[3]));
+                document.getElementById('input-version').value = stripHTML(fields[4]);
+                document.getElementById('input-status').value = stripHTML(fields[5]);
+                document.querySelector('#section-1 .rich-text-editor').innerHTML = fields[6];
+                document.querySelector('#section-2 .rich-text-editor').innerHTML = fields[7];
+                document.querySelector('#section-3 .rich-text-editor').innerHTML = fields[8];
+                document.querySelector('#section-4 .rich-text-editor').innerHTML = fields[9];
+                document.querySelector('#section-5 .rich-text-editor').innerHTML = fields[10];
+                document.querySelector('#section-6 .rich-text-editor').innerHTML = fields[11];
+                document.querySelector('#section-7 .rich-text-editor:not(.subfield-editor)').innerHTML = fields[12];
+                document.getElementById('input-7-1').value = stripHTML(fields[13]);
+                document.getElementById('input-7-2').value = stripHTML(fields[14]);
+                document.getElementById('editor-7-3').innerHTML = fields[15];
+                document.querySelector('#section-8 .rich-text-editor').innerHTML = fields[16];
+                document.querySelector('#section-9 .rich-text-editor').innerHTML = fields[17];
+                document.getElementById('editor-status').innerHTML = fields[18];
+                document.getElementById('input-approved-by').value = stripHTML(fields[19]);
+                autoResizeGlobal();
+                document.getElementById('import-status').innerText = 'Daten erfolgreich importiert!';
+                document.getElementById('import-status').style.color = 'green';
+                setTimeout(() => closeImportModal(), 1500);
+            } catch (e) {
+                document.getElementById('import-status').innerText = `Fehler beim Import: ${e.message}`;
+                document.getElementById('import-status').style.color = 'red';
+            }
+        }
+
+        function addHistoryRow() {
+            const b = document.querySelector('#history-table tbody');
+            const r = document.createElement('tr');
+            r.innerHTML = `<td><input type="text" placeholder="vX.X"></td><td><input type="text" placeholder="TT.MM.JJJJ"></td><td><input type="text" placeholder="Name"></td><td><input type="text" placeholder="Bemerkung..."></td><td class="history-row-del-td"><button class="history-row-del" onclick="removeHistoryRow(this)">🗑️</button></td>`;
+            b.appendChild(r);
+        }
+
+        function removeHistoryRow(btn) { if (confirm('Zeile löschen?')) btn.closest('tr').remove(); }
+
+        /* --- RESPONSIVE POST-IT SYSTEM --- */
+        function initPostItSystem() {
+            const c = document.querySelector('.canvas-container');
+            const s = document.getElementById('new-postit-source');
+
+            // 1. DRAG START
+            s.addEventListener('dragstart', (e) => {
+                e.dataTransfer.effectAllowed = 'copy';
+                e.dataTransfer.setData('type', 'new');
+            });
+
+            // 2. ENABLE DROP
+            c.addEventListener('dragenter', (e) => { e.preventDefault(); });
+            c.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'copy';
+            });
+
+            // 3. DROP FOR NEW STICKY
+            c.addEventListener('drop', (e) => {
+                e.preventDefault();
+                if (e.dataTransfer.getData('type') === 'new') {
+                    const rect = c.getBoundingClientRect();
+                    const leftPx = e.clientX - rect.left - 90;
+                    const topPx = e.clientY - rect.top - 65;
+
+                    const leftPct = ((leftPx / rect.width) * 100).toFixed(4) + '%';
+                    const topPct = ((topPx / rect.height) * 100).toFixed(4) + '%';
+                    createPostIt(c, leftPct, topPct);
+                }
+            });
+
+            // Bind existing loaded stickies
+            document.querySelectorAll('.post-it').forEach(note => {
+                const h = note.querySelector('.post-it-header');
+                const d = note.querySelector('.delete-btn');
+                if (d) d.onclick = (e) => { e.stopPropagation(); note.remove(); };
+                if (h) makeDraggable(note, h);
+            });
+        }
+
+        function createPostIt(p, xPct, yPct, text = "Notiz...") {
+            const d = document.createElement('div'); d.className = 'post-it';
+            d.style.left = xPct; d.style.top = yPct;
+            d.innerHTML = `<div class="post-it-header"><span class="delete-btn">X</span></div><div class="post-it-body" contenteditable="true">${text}</div>`;
+            d.querySelector('.delete-btn').onclick = (e) => { e.stopPropagation(); d.remove(); };
+            p.appendChild(d); makeDraggable(d, d.querySelector('.post-it-header'));
+        }
+
+        function makeDraggable(el, h) {
+            let active = false, sx, sy, initialLeftPx, initialTopPx, rect;
+            h.onmousedown = (e) => {
+                e.preventDefault(); active = true;
+                el.classList.add('active-drag');
+                sx = e.clientX; sy = e.clientY;
+
+                const container = document.querySelector('.canvas-container');
+                rect = container.getBoundingClientRect();
+
+                const computed = window.getComputedStyle(el);
+                initialLeftPx = parseFloat(computed.left) || 0;
+                initialTopPx = parseFloat(computed.top) || 0;
+
+                el.style.left = initialLeftPx + 'px';
+                el.style.top = initialTopPx + 'px';
+
+                const move = (ev) => {
+                    if (active) {
+                        el.style.left = (initialLeftPx + ev.clientX - sx) + 'px';
+                        el.style.top = (initialTopPx + ev.clientY - sy) + 'px';
+                    }
+                };
+
+                const up = () => {
+                    active = false; el.classList.remove('active-drag');
+
+                    const finalLeftPx = parseFloat(el.style.left);
+                    const finalTopPx = parseFloat(el.style.top);
+                    el.style.left = ((finalLeftPx / rect.width) * 100).toFixed(4) + '%';
+                    el.style.top = ((finalTopPx / rect.height) * 100).toFixed(4) + '%';
+
+                    document.removeEventListener('mousemove', move);
+                    document.removeEventListener('mouseup', up);
+                };
+                document.addEventListener('mousemove', move); document.addEventListener('mouseup', up);
+            };
+        }
+
+        function openSectionInfo(id) {
+            const txt = {
+                'general': `
+            <h2>Zweck und Zielsetzung des WBF Innovation Model Canvas</h2>
+
+            <h3>1. Zweck</h3>
+            <p>Das Innovation Model Canvas ist das zentrale Steuerungsinstrument für die Initiierung von Proof of
+                Concepts (PoCs) im Rahmen von Innovationsvorhaben. Es dient als gemeinsames Verständnis zwischen dem
+                Fachamt und dem Innovationsteam. Ziel ist es, komplexe Fragestellungen auf einer einzigen Seite zu
+                strukturieren, um Innovationsvorhaben zielgerichtet, ressourcenschonend und entscheidungsorientiert zu
+                validieren.</p>
+
+            <h3>2. Nutzen</h3>
+            <p>Ein PoC ist kein Selbstzweck, sondern ein Experiment zur Beantwortung einer geschäftskritischen Frage.
+                Das Canvas stellt sicher, dass wir nicht nur technische Machbarkeit prüfen, sondern die Voraussetzungen
+                für eine spätere Produktiv-Umsetzung schaffen.</p>
+            <p>Es erfüllt drei wesentliche Funktionen:</p>
+            <ul>
+                <li><strong>Fokussierung:</strong> Es definiert klare Grenzen ("In-Scope" vs. "Out-of-Scope") und
+                    verhindert das unkontrollierte Anwachsen von Anforderungen während der kurzen PoC-Phase.</li>
+                <li><strong>Vorbereitung für einen Umsetzungsentscheid:</strong> Das Canvas ist so aufgebaut, dass die
+                    Ergebnisse direkt in das Factsheet für das Generalsekretariat WBF überführt werden können. Vor dem
+                    Start wird definiert, welche Daten (KPIs, Kostenindikationen, Nutzen) gemessen werden müssen, um
+                    später eine fundierte "Go / No-Go"-Entscheidung zu ermöglichen.</li>
+                <li><strong>Synchronisation:</strong> Das Canvas harmonisiert das Verständnis aller Beteiligten.
+                    <ul>
+                        <li><em>Bei PULL-Vorhaben:</em> Zwingt dazu, das Problem des Amtes präzise zu isolieren, bevor
+                            über Lösungen gesprochen wird.</li>
+                        <li><em>Bei PUSH-Vorhaben:</em> Zwingt dazu, abstrakte Technologien in konkrete, wertstiftende
+                            Szenarien für die Bundesverwaltung zu übersetzen.</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3>3. Anwendung im Innovationsprozess</h3>
+            <p>Das Dokument ist ein „lebendes“ Artefakt. Es wird vor Beginn des PoCs gemeinsam ausgefüllt und dient als
+                Freigabedokument für den Start. Am Ende des PoCs werden die Hypothesen (Feld 2) und Erfolgskriterien
+                (Feld 5) gegen die Realität geprüft.</p>
+            <ul>
+                <li><strong>Status PULL:</strong> Fokus auf Nutzerbedürfnisse, Prozessintegration, Effizienzsteigerung
+                    und Akzeptanzkriterien des Amtes.</li>
+                <li><strong>Status PUSH:</strong> Fokus auf technologische Reife, Skalierbarkeit im WBF und potenzielle
+                    Anwendungsfälle.</li>
+            </ul>
+
+            <p style="margin-top: 20px; font-style: italic; border-left: 4px solid #10b981; padding-left: 10px;">
+                <strong>Fazit:</strong> Nur wenn das Canvas vollständig und plausibel ausgefüllt ist, startet die
+                Umsetzung. Dies ermöglicht einen effizienten Einsatz von Bundesmitteln und eine erhöhte Erfolgsquote bei
+                der Überführung von Innovationen in den regulären Betrieb.
+            </p>
+            
+            <hr style="margin-top: 30px; border-top: 1px solid #e2e8f0;">
+            <h3>Copyright & Lizenz</h3>
+            <p style="font-size: 0.9em; color: #555;">
+                © 2026 Fabian Muff / ISCeco Innovationsteam.<br><br>
+                Dieses Werk ("Innovation Model Canvas" – Methodik und Inhalt) ist lizenziert unter einer <strong>Creative Commons Namensnennung - Weitergabe unter gleichen Bedingungen 4.0 International Lizenz (CC BY-SA 4.0)</strong>.<br>
+                Es darf frei verwendet und angepasst werden, sofern der Urheber genannt wird und alle abgeleiteten Werke unter derselben Lizenz veröffentlicht werden.<br><br>
+                Der Software Code (HTML, CSS, JS) ist lizenziert unter der <strong>GNU Affero General Public License v3.0 (AGPLv3)</strong>, wodurch Anpassungen am Code ebenfalls offengelegt werden müssen.
+            </p>
+        `,
+                1: `
+            <h2>1. Ausgangslage</h2>
+            <p><strong>Leitfrage: Warum tun wir das überhaupt?</strong></p>
+            <ul>
+                <li><strong>Bei PULL (Amt-Anfrage):</strong> Beschreiben Sie das Problem, nicht die gewünschte Lösung. Wo verliert das Amt Zeit? Wo entstehen Fehler? Welcher Bürger-Service ist ungenügend?</li>
+                <li><strong>Bei PUSH (Tech-Treiber):</strong> Welches Szenario könnte durch die neue Technologie (z.B. GenAI, Blockchain) revolutioniert werden?</li>
+            </ul>
+            <p><strong>Wichtig:</strong> Keine technischen Details hier, sondern Business-Kontext.<br>
+            (PUSH: Welches Szenario soll verbessert werden?)</p>
+        `,
+                2: `
+            <h2>2. Lösung & Hypothese</h2>
+            <p><strong>Leitfrage:</strong> Was ist das Experiment?</p>
+            <p><strong>Hypothese:</strong> Formulieren Sie eine Annahme, die falsifizierbar ist (z. B. "Wir glauben, dass LLMs Anfragen von Bürgern zu 80% korrekt vorformulieren können").</p>
+            <p><strong>Lösung:</strong> Beschreiben Sie den PoC (App, Dashboard, Algorithmus).</p>
+            <p><strong>Scope:</strong> Definieren Sie "Out-of-Scope" (Was machen wir explizit nicht?), um Erwartungen zu managen und die Timebox zu halten.</p>
+        `,
+                3: `
+            <h2>3. Mehrwert</h2>
+            <p><strong>Leitfrage:</strong> Was springt dabei heraus?</p>
+            <p><strong>Qualitativ:</strong> Bessere Entscheidungsqualität, höhere Mitarbeiterzufriedenheit, Imagegewinn.</p>
+            <p><strong>Quantitativ:</strong> Versuchen Sie eine erste Schätzung (z.B. "Potenzial zur Einsparung von 2 FTE pro Amt").</p>
+            <p><strong>Strategie:</strong> Passt das Vorhaben zur Digitalstrategie der Bundesverwaltung? (Dies ist essentiell für das spätere GS-Factsheet).</p>
+            <p><strong>Sicht:</strong> Beschreiben Sie den Mehrwert aus Sicht "Amt" und aus Sicht "Departement WBF".</p>
+        `,
+                4: `
+            <h2>4. Stakeholder / User</h2>
+            <p><strong>Leitfrage:</strong> Mit wem arbeiten wir?</p>
+            <p><strong>User:</strong> Wer bedient den PoC? Nennen Sie konkrete Personas (z.B. "Sachbearbeiterin im Rechtsdienst"). Beschreiben Sie die genaue Nutzung der einzelnen Personas – welche Aufgaben sie erledigen, welche Daten sie benötigen und wie sie mit dem System interagieren.</p>
+            <p><strong>Commitment:</strong> Bei Pull‑Projekten muss hier ein Ansprechpartner stehen, der Zeit für Tests und Feedback zusichert. Ohne definierte Tester und deren Verfügbarkeit kann der PoC nicht durchgeführt werden.</p>
+        `,
+                5: `
+            <h2>5. Erfolgskriterien</h2>
+            <p><strong>Leitfrage:</strong> Wann ist das Explorationsvorhaben ein Erfolg?</p>
+            <p><strong>KPIs:</strong> Definieren Sie KPIs vor dem Start, um subjektive Diskussionen zu vermeiden.</p>
+            <h3>Harte KPIs</h3>
+            <ul>
+                <li>Antwortzeit &lt; 2s</li>
+                <li>Fehlerquote &lt; 5%</li>
+                <li>Durchsatz (z. B. Transaktionen pro Sekunde)</li>
+            </ul>
+            <h3>Weiche KPIs</h3>
+            <ul>
+                <li>User-Feedback Score</li>
+                <li>Verständlichkeit der UI</li>
+            </ul>
+            <p><strong>Factsheet:</strong> Diese Daten bilden das Rückgrat der Empfehlung im späteren Factsheet (Go / No-Go).</p>
+        `,
+                6: `
+            <h2>6. Perspektiven</h2>
+            <p><strong>Leitfrage:</strong> Was sind die perspektivischen Möglichkeiten nach dem PoC?</p>
+            <p><strong>Skalierung:</strong> Ist die Lösung ein "One-Off" für ein Amt oder eine Plattform-Lösung für das gesamte WBF (Skaleneffekte)?</p>
+            <p><strong>Umsetzung:</strong> Deuten Sie an, ob später eine Eigenentwicklung ("Make") oder eine Beschaffung ("Buy") wahrscheinlich ist.</p>
+        `,
+                7: `
+            <h2>7. Daten und Compliance</h2>
+            <p><strong>Leitfrage:</strong> Dürfen wir das so bauen?</p>
+            <p><strong>Datenschutz:</strong> Werden Personendaten verarbeitet? Wenn ja: Liegt eine Rechtsgrundlage vor oder müssen Daten anonymisiert/synthetisiert werden?</p>
+            <p><strong>Sicherheit:</strong> Wo läuft der PoC? (Cloud vs. On-Premise). Beachten Sie allfällige WBF-Cloud-Richtlinien.</p>
+            <p><em>Klären Sie dies vor Start, um einen Abbruch durch den Datenschutzbeauftragten zu vermeiden.</em></p>
+        `,
+                8: `
+            <h2>8. Ressourcen und Zeithorizont</h2>
+            <p><strong>Leitfrage:</strong> Wieviel Investition ist nötig?</p>
+            <p><strong>Timebox:</strong> PoCs sind keine Dauerprojekte. Setzen Sie ein hartes Enddatum (z.B. 6 Wochen).</p>
+            <ul>
+                <li>für Entwicklung</li>
+                <li>für Testing</li>
+            </ul>
+            <p><strong>Input:</strong> Was muss das Amt liefern? (Datenzugriff, Fachwissen, Lizenzen).</p>
+            <p><strong>Budget:</strong> Falls interne / externe Dienstleister involviert sind, hier die Zeit- / Kostenschätzung eintragen.</p>
+        `,
+                9: `
+            <h2>9. Risiken</h2>
+            <p><strong>Leitfrage:</strong> Worüber könnten wir stolpern?</p>
+            <h3>Showstopper</h3>
+            <p>Seien Sie ehrlich bezüglich potenzieller Showstopper.</p>
+            <h3>Beispiele</h3>
+            <ul>
+                <li>Datenqualität ist unbekannt</li>
+                <li>Schnittstelle zu Fachanwendung X ist nicht dokumentiert</li>
+                <li>Ressourcenengpass im Amt während Ferienzeit</li>
+            </ul>
+        `
+            };
+            
+            const closeBtn = '<button class="modal-close" onclick="closeSectionInfo()">×</button>';
+            if (id === 'general') {
+                document.getElementById('section-info-content').innerHTML = closeBtn + txt[id];
+            } else {
+                document.getElementById('section-info-content').innerHTML = closeBtn + `<h2>Info</h2><p>${txt[id] || 'Keine Info.'}</p>`;
+            }
+            document.getElementById('section-info-modal').classList.add('visible');
+        }
+        function closeSectionInfo() { document.getElementById('section-info-modal').classList.remove('visible'); }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initFancyEditor();
+            initPostItSystem();
+            
+            // Set dynamic flow layout as starting state for fresh, highly visible text
+            const savedLayout = document.getElementById('input-layout-mode')?.value || 'flow';
+            changeLayoutMode(savedLayout);
+
+            openSectionInfo('general');
+
+            // Close modal on outside click
+            const modal = document.getElementById('section-info-modal');
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeSectionInfo();
+                }
+            });
+            
+            window.addEventListener('resize', () => { initGridResizers(); autoResizeGlobal(); });
+        });
+    </script>
+
+</body></html>
